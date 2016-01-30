@@ -1,7 +1,7 @@
 #include "odeint.h"
 
 #define MAXSTP 10000 
-#define KMAXX 8				// Max rows in extrapolation
+#define KMAXX 16			// Max rows in extrapolation. Default = 8
 #define IMAXX (KMAXX+1)
 #define SAFE1 0.25			// Safety factors
 #define SAFE2 0.7
@@ -10,11 +10,8 @@
 #define TINY 1.0e-30		// Prevents divbyzero
 #define SCALMX 0.1			// 1/SCALMX is max factor by which stepsize can increate
 
-// extern int kmax,kount; 
-// extern double *xp,**yp,dxsav; 
-
-int kmax = 0, kount = 0;
-double *xp = 0, **yp = 0, dxsav = 0;
+extern int kmax,kount; 
+extern double *xp,**yp,dxsav; 
 
 // User storage for intermediate results. Preset kmax and dxsav in 
 // the calling program. If kmax != 0 results are stored at approximate

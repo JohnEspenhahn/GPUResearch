@@ -2,53 +2,71 @@
 #include "main.h"
 #include <stdio.h>
 
-#define NVAR 2
-#define END_STEPS 1000000000
+#define ZONES 1
+#define NVAR 2*ZONES
+#define END_STEPS 1000
+#define KMAX 0
 
 #define nC 1.4e-4  // cm^-3
 #define nO 3.2e-4  // cm^-3
 #define nSi 1.5e-5 // cm^-3
 #define nH_tot 91  // cm^-3
 
-#define TEMP 1000 // K
+#define TEMP 700 // K
+#define GRAIN_TEMP 75 // K
 
-double *vec_nHx;
+long H2_calls = 0, H_p_calls = 0;
 
-double getnH2(int zone) { return vec_nHx[2*zone-1]; }
-double getnH_p(int zone) { return vec_nHx[2*zone]; }
-double getnH(int zone) { return nH_tot - getnH_p(zone) - getnH2(zone); }
-double getne(int zone) { return getnH_p(zone) + nC + nSi; }
+FILE *fp;
+
+double getnH(double nH_p, double nH2) { return nH_tot - nH_p - nH2; }
+double getne(double nH_p) { return nH_p + nC + nSi; }
 
 // t, nH2 are current values. ptr_dnH2dt is last slope. update ptr_dnH2dt
-void dnH2dt(int zone, double t, double nH2, double *ptr_dnH2dt) {
-	double nH = getnH(zone);
+void dnH2dt(double t, double nH_p, double nH2, double *ptr_dnH2dt) {
+	double nH = getnH(nH_p, nH2);
 	
-	*ptr_dnH2dt = k1(TEMP)*nH*nH - k2(TEMP,nH,nH2)*nH2*nH - k3(TEMP,nH,nH2)*nH2*nH2 - SELF_SHIELDING*nH2;
+	H2_calls += 1;
+	*ptr_dnH2dt = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH,nH2)*nH2*nH - k3(TEMP,nH,nH2)*nH2*nH2; // - SELF_SHIELDING*nH2;
+	
+	fprintf(fp, "%G,%G,%G,", (*ptr_dnH2dt), nH, nH2);
 }
 
-void dnH_pdt(int zone, double t, double nH_p, double *ptr_dnH_pdt) {
-	double nH = getnH(zone), 
-			ne = getne(zone);
+void dnH_pdt(double t, double nH_p, double nH2, double *ptr_dnH_pdt) {
+	double nH = getnH(nH_p, nH2), 
+			ne = getne(nH_p);
 	
-	*ptr_dnH_pdt = COSMIC_RAY_RATE*nH + k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne;
+	H_p_calls += 1;
+	*ptr_dnH_pdt = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne; // + COSMIC_RAY_RATE*nH;
+	
+	fprintf(fp, "%G,%G,%G\n", (*ptr_dnH_pdt), ne, nH_p);
 }
 
 void dnHxdt(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 	for (int i = 1; i <= nvar; i++) {
 		if (IS_ODD(i)) { // if odd, nH2
-			dnH2dt(i, t, vec_nHx[i], &vec_dnHxdt[i]);
+			double nH2 = vec_nHx[i];
+			double nH_p = vec_nHx[i+1];
+			dnH2dt(t, nH_p, nH2, &vec_dnHxdt[i]);
 		} else {
-			dnH_pdt(i/2, t, vec_nHx[i], &vec_dnHxdt[i]);
+			double nH_p = vec_nHx[i];
+			double nH2 = vec_nHx[i-1];
+			dnH_pdt(t, nH_p, nH2, &vec_dnHxdt[i]);
 		}
 	}
 }
 
+int kmax = KMAX, kount = 0;
+double *xp, **yp, dxsav = 100;
 int main() {
-	vec_nHx = vector(1, NVAR);
-	for (int i = 0; i < NVAR; i++) { vec_nHx[i] = 0; }
+	fp = fopen("out.csv", "w");
+	fprintf(fp, "dnH2,nH,nH2,dnH_p,ne,nH_p\n");
 	
-	double *vec_dnHxdt = vector(1, NVAR);
-	dnHxdt(0, NVAR, vec_nHx, vec_dnHxdt);
+	xp = vector(1, KMAX);
+	yp = matrix(1, NVAR, 1, KMAX);
+	
+	double *vec_nHx = vector(1, NVAR);
+	for (int i = 0; i < NVAR; i++) { vec_nHx[i] = 0; }
 	
 	double x1 = 0, x2 = END_STEPS;
 	double eps = 0.001;
@@ -57,9 +75,12 @@ int main() {
 	int nok = 0, nbad = 0;
 	odeint(vec_nHx, NVAR, x1, x2, eps, h1, 0, &nok, &nbad, &dnHxdt);
 	
-	printf("integral(dnH2dt 0:%e) = %G\nintegral(dnH_pdt, 0:%e) = %G\n", (double) END_STEPS, vec_nHx[1], (double) END_STEPS, vec_nHx[2]);
+	printf("\nH2 calls %ld\n", H2_calls);
+	printf("H_p calls %ld\n", H_p_calls);
 	printf("OK calls %d\n", nok);
 	printf("bad calls %d\n", nbad);
+	
+	fclose(fp);
 	
 	return 0;
 }

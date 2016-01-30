@@ -8,18 +8,22 @@
 #define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
 #define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1
 
-void dnH2dt(int zone, double t, double nH2, double *ptr_dnH2dt);
-void dnH_pdt(int zone, double t, double nH_p, double *ptr_dnH_pdt);
+void dnH2dt(double t, double nH_p, double nH2, double *ptr_dnH2dt);
+void dnH_pdt(double t, double nH_p, double nH2, double *ptr_dnH_pdt);
 
-double k1(double temp) { 
-	return STEP_TIME * 6.6e-19 * sqrt(temp); 
+double k1(double temp, double temp_grain) { 
+	double fa = 1/(1 + 1e4*exp(-600/temp_grain));
+	double t2 = temp / 100;
+	double t_grain2 = temp_grain / 100;
+	
+	return STEP_TIME * 3e-17 * ((sqrt(t2) * fa) / (1+0.4*sqrt(t2+t_grain2) + 0.2*t2 + 0.08*t2*t2));
 }
 double k2(double temp, double nH, double nH2) {
 	double kH = 1.2e-9*exp(-5.24e4/temp);
 	double kL = 1.12e-10*exp(-7.035e4/temp);
 	
 	double log_temp = log(temp/1.0e4);
-	double ncr = pow(4.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10);
+	double ncr = exp(4.0 - 0.416*log_temp - 0.327*log_temp*log_temp);
 	
 	return STEP_TIME * kH*pow(kH/kL, -1.0/(1+nH/ncr));
 }
@@ -28,7 +32,7 @@ double k3(double temp, double nH, double nH2) {
 	double kL = 1.18e-10*exp(-6.95e4/temp);
 	
 	double log_temp = log(temp/1.0e4);
-	double ncr = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
+	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
 	
 	return STEP_TIME * kH*pow(kH/kL, -1.0/(1+nH/ncr));
 }

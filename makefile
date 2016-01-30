@@ -4,3 +4,4 @@ DEBUG=-g
 
 all:
 	gcc $(DEBUG) $(SOURCE) -o main.exe -Wall $(FLAGS)
+	main.exe
