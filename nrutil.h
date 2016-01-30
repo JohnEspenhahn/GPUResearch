@@ -10,6 +10,8 @@
 
 #define ARRSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
+#define IS_ODD(x) ((x&1) == 1)
+
 static double sqrarg;
 #define SQR(a) ((sqrarg=(a)) == 0.0 ? 0.0 : sqrarg*sqrarg)
 

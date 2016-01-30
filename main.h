@@ -3,13 +3,13 @@
 
 #include <math.h>
 
-#define STEP_TIME 36000 // s
+#define STEP_TIME 3600 // s
 
 #define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
 #define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1
 
-void dnH2dt(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
-void dnH_pdt(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
+void dnH2dt(int zone, double t, double nH2, double *ptr_dnH2dt);
+void dnH_pdt(int zone, double t, double nH_p, double *ptr_dnH_pdt);
 
 double k1(double temp) { 
 	return STEP_TIME * 6.6e-19 * sqrt(temp); 
