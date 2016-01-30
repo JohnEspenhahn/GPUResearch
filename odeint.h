@@ -4,9 +4,9 @@
 #include <math.h>
 #include "nrutil.h"
 
-void mmid(float y[], float dydx[], int nvar, float xs, float htot, int nstep, float yout[], void (*derivs)(float, int, float[], float[]));
-void pzextr(int iest, float xest, float yest[], float yz[], float dy[], int nv);
-void bsstep(float y[], float dydx[], int nvar, float *xx, float htry, float eps, float yscal[], float *hdid, float *hnext, void (*derivs)(float, int, float[], float[]));
-void odeint(float ystart[], int nvar, float x1, float x2, float eps, float h1, float hmin, int *nok, int *nbad, void (*derivs)(float, int, float[], float[]));
+void mmid(double y[], double dydx[], int nvar, double xs, double htot, int nstep, double yout[], void (*derivs)(double, int, double[], double[]));
+void pzextr(int iest, double xest, double yest[], double yz[], double dy[], int nv);
+void bsstep(double y[], double dydx[], int nvar, double *xx, double htry, double eps, double yscal[], double *hdid, double *hnext, void (*derivs)(double, int, double[], double[]));
+void odeint(double ystart[], int nvar, double x1, double x2, double eps, double h1, double hmin, int *nok, int *nbad, void (*derivs)(double, int, double[], double[]));
 
 #endif

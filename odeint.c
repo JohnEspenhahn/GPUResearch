@@ -11,10 +11,10 @@
 #define SCALMX 0.1			// 1/SCALMX is max factor by which stepsize can increate
 
 // extern int kmax,kount; 
-// extern float *xp,**yp,dxsav; 
+// extern double *xp,**yp,dxsav; 
 
 int kmax = 0, kount = 0;
-float *xp = 0, **yp = 0, dxsav = 0;
+double *xp = 0, **yp = 0, dxsav = 0;
 
 // User storage for intermediate results. Preset kmax and dxsav in 
 // the calling program. If kmax != 0 results are stored at approximate
@@ -23,17 +23,17 @@ float *xp = 0, **yp = 0, dxsav = 0;
 // variables, with memoryallocations xp[1..kmax] and 
 // yp[1..nvar][1..kmax] for the arrays, should be in the calling program
 
-void odeint(float ystart[], int nvar, float x1, float x2, float eps, 
-		float h1, float hmin, int *nok, int *nbad, 
-		void (*derivs)(float, int, float[], float[])) 
+void odeint(double ystart[], int nvar, double x1, double x2, double eps, 
+		double h1, double hmin, int *nok, int *nbad, 
+		void (*derivs)(double, int, double[], double[])) 
 // Driver with adaptive stepsize control. Integrate starting values ystart[1..nvar] from x1 to x2 with accuracy eps, 
 // storing intermediate results in global variables. h1 should be set as a guessed ﬁrst stepsize, hmin as the minimum allowed stepsize 
 // (can be zero). On output nok and nbad are the number of good and bad (but retried and ﬁxed) steps taken, and ystart is replaced by 
 // values at the end of the integration interval. derivs is the user-supplied routine for calculating the right-hand side derivative, 
 {
 	int nstp,i; 
-	float xsav,x,hnext,hdid,h; 
-	float *yscal,*y,*dydx;
+	double xsav,x,hnext,hdid,h; 
+	double *yscal,*y,*dydx;
 	
 	yscal=vector(1,nvar);
 	y=vector(1,nvar);
@@ -89,11 +89,11 @@ void odeint(float ystart[], int nvar, float x1, float x2, float eps,
 	nrerror("Too many steps in routine odeint");
 }
 
-float **d, *x; // Pointers to matrix and vector used by pzextr
+double **d, *x; // Pointers to matrix and vector used by pzextr
 		
-void bsstep(float y[], float dydx[], int nvar, float *xx, float htry, 
-		float eps, float yscal[], float *hdid, float *hnext,
-		void (*derivs)(float, int, float[], float[])) {
+void bsstep(double y[], double dydx[], int nvar, double *xx, double htry, 
+		double eps, double yscal[], double *hdid, double *hnext,
+		void (*derivs)(double, int, double[], double[])) {
 // Bulirsch-Stoer step with monitoring of local truncation error to 
 // ensure accuracy and adjust stepsize. Input are the dependent 
 // variable vector y[1..nvar] and its derivative dydx[1..nvar] at the 
@@ -108,11 +108,11 @@ void bsstep(float y[], float dydx[], int nvar, float *xx, float htry,
 // the routine is called by odeint.
 	int i,iq,k,kk,km; 
 	static int first=1,kmax,kopt;
-	static float epsold = -1.0,xnew;
-	float eps1,errmax,fact,h,red,scale,work,wrkmin,xest;
-	float *err,*yerr,*ysav,*yseq;
-	static float a[IMAXX+1];
-	static float alf[KMAXX+1][KMAXX+1];
+	static double epsold = -1.0,xnew;
+	double eps1,errmax,fact,h,red,scale,work,wrkmin,xest;
+	double *err,*yerr,*ysav,*yseq;
+	static double a[IMAXX+1];
+	static double alf[KMAXX+1][KMAXX+1];
 	static int nseq[IMAXX+1]={0,2,4,6,8,10,12,14,16,18};
 	int reduct,exitflag=0;
 	d=matrix(1,nvar,1,KMAXX);
@@ -215,7 +215,7 @@ void bsstep(float y[], float dydx[], int nvar, float *xx, float htry,
 	free_matrix(d,1,nvar,1,KMAXX);
 }
 
-void pzextr(int iest, float xest, float yest[], float yz[], float dy[], int nvar) 
+void pzextr(int iest, double xest, double yest[], double yz[], double dy[], int nvar) 
 // Use polynomial extrapolation to evaluate nvar functions at x = 0 by
 // ﬁtting a polynomial to a sequence of estimates with progressively 
 // smaller values x = xest, and corresponding function vectors 
@@ -224,7 +224,7 @@ void pzextr(int iest, float xest, float yest[], float yz[], float dy[], int nvar
 // estimated error is output as dy[1..nvar]. 
 { 
 	int k1,j; 
-	float q,f2,f1,delta,*c;
+	double q,f2,f1,delta,*c;
 	
 	c=vector(1,nvar); 
 	x[iest]=xest; // Save current independent variable. 
@@ -254,14 +254,14 @@ void pzextr(int iest, float xest, float yest[], float yz[], float dy[], int nvar
 }
 
 
-void mmid(float y[], float dydx[], int nvar, float xs, float htot, 
-		int nstep, float yout[], void (*derivs)(float, int, float[], float[])) 
+void mmid(double y[], double dydx[], int nvar, double xs, double htot, 
+		int nstep, double yout[], void (*derivs)(double, int, double[], double[])) 
 // Modifed midpoint step. At xs, input the dependent variable vector y[1..nvar] and its derivative vector dydx[1..nvar]. Also input is htot, 
 // the total step to be made, and nstep, the number of substeps to be used. The output is returned as yout[1..nvar], which need not be a distinct
 // array from y; if it is distinct, however, then y and dydx are returned undamaged. 
 { 
 	int n,i; 
-	float x,swap,h2,h,*ym,*yn;
+	double x,swap,h2,h,*ym,*yn;
 
 	ym=vector(1,nvar); 
 	yn=vector(1,nvar); 
