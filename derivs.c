@@ -33,7 +33,7 @@ void dnH2dt(double t, double nH_p, double nH2, double *ptr_dnH2dt) {
 	
 	*ptr_dnH2dt = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH,nH2)*nH2*nH - k3(TEMP,nH,nH2)*nH2*nH2; // - SELF_SHIELDING*nH2;
 	
-	fprintf(fp, "%G,%G,%G,", (*ptr_dnH2dt), nH, nH2);
+	// fprintf(fp, "%G,%G,%G,", (*ptr_dnH2dt), nH, nH2);
 }
 
 void dnH_pdt(double t, double nH_p, double nH2, double *ptr_dnH_pdt) {
@@ -42,7 +42,7 @@ void dnH_pdt(double t, double nH_p, double nH2, double *ptr_dnH_pdt) {
 	
 	*ptr_dnH_pdt = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne + COSMIC_RAY_RATE*nH;
 	
-	fprintf(fp, "%G,%G,%G\n", (*ptr_dnH_pdt), ne, nH_p);
+	// fprintf(fp, "%G,%G,%G\n", (*ptr_dnH_pdt), ne, nH_p);
 }
 
 double k1(double temp, double temp_grain) { 

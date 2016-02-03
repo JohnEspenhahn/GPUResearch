@@ -5,25 +5,24 @@
 #define ZONES 1
 #define NVAR 2*ZONES
 #define END_STEPS 4000000
-#define KMAX 0
+#define KMAX 255
 
 FILE *fp;
 
 int kmax = KMAX, kount = 0;
-double *xp, **yp, dxsav = 100;
+double *xp, **yp, dxsav = END_STEPS/KMAX;
 int main() {
 	fp = fopen("out.csv", "w");
-	fprintf(fp, "dnH2dt,nH,nH2,dnH_pdt,ne,nH_p\n");
 	
 	xp = vector(1, KMAX);
 	yp = matrix(1, NVAR, 1, KMAX);
 	
 	double *vec_nHx = vector(1, NVAR);
-	for (int i = 0; i < NVAR; i++) { vec_nHx[i] = 0; }
+	for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
 	
 	double x1 = 0, x2 = END_STEPS;
-	double eps = 1e-4;
-	double h1  = 1e-6;
+	double eps = 1e-5;
+	double h1  = 1e-7;
 	
 	int nok = 0, nbad = 0;
 	odeint(vec_nHx, NVAR, x1, x2, eps, h1, 0, &nok, &nbad, &dnHxdt);
@@ -39,6 +38,11 @@ int main() {
 	printf("ne   = %G\n", ne);
 	printf("OK calls %d\n", nok);
 	printf("bad calls %d\n", nbad);
+	
+	fprintf(fp, "x,dnH2dt,dnH_pdt\n");
+	for (int i = 1; i < KMAX; i++) {
+		fprintf(fp, "%G,%G,%G\n", xp[i], yp[1][i], yp[2][i]);
+	}
 	
 	fclose(fp);
 	

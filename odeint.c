@@ -1,7 +1,7 @@
 #include "odeint.h"
 
 #define MAXSTP 10000 
-#define KMAXX 8			// Max rows in extrapolation. Default = 8
+#define KMAXX 16			// Max rows in extrapolation. Default = 8
 #define IMAXX (KMAXX+1)
 #define SAFE1 0.25			// Safety factors
 #define SAFE2 0.7
