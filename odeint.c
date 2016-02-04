@@ -13,6 +13,9 @@
 extern int kmax,kount; 
 extern double *xp,**yp,dxsav; 
 
+void mmid(double y[], double dydx[], int nvar, double xs, double htot, int nstep, double yout[], void (*derivs)(double, int, double[], double[]));
+void pzextr(int iest, double xest, double yest[], double yz[], double dy[], int nv);
+
 // User storage for intermediate results. Preset kmax and dxsav in 
 // the calling program. If kmax != 0 results are stored at approximate
 // intervals dxsav in the arrays xp[1..kount], yp[1..nvar] [1..kount],
@@ -22,7 +25,8 @@ extern double *xp,**yp,dxsav;
 
 void odeint(double ystart[], int nvar, double x1, double x2, double eps, 
 		double h1, double hmin, int *nok, int *nbad, 
-		void (*derivs)(double, int, double[], double[])) 
+		void (*derivs)(double, int, double[], double[]),
+		void (*rkqs)(double[], double[], int, double*, double, double, double[], double*, double*, void (*)(double, int, double[], double[])))
 // Driver with adaptive stepsize control. Integrate starting values ystart[1..nvar] from x1 to x2 with accuracy eps, 
 // storing intermediate results in global variables. h1 should be set as a guessed ﬁrst stepsize, hmin as the minimum allowed stepsize 
 // (can be zero). On output nok and nbad are the number of good and bad (but retried and ﬁxed) steps taken, and ystart is replaced by 
@@ -61,7 +65,7 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 		if ((x+h-x2)*(x+h-x1) > 0.0) 
 			h=x2-x; // If stepsize can overshoot, decrease.
 		
-		(*bsstep)(y,dydx,nvar,&x,h,eps,yscal,&hdid,&hnext,derivs);
+		(*rkqs)(y,dydx,nvar,&x,h,eps,yscal,&hdid,&hnext,derivs);
 		
 		if (hdid == h) ++(*nok);
 		else ++(*nbad);
@@ -87,7 +91,7 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 }
 
 double **d, *x; // Pointers to matrix and vector used by pzextr
-		
+
 void bsstep(double y[], double dydx[], int nvar, double *xx, double htry, 
 		double eps, double yscal[], double *hdid, double *hnext,
 		void (*derivs)(double, int, double[], double[])) {

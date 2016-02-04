@@ -25,7 +25,7 @@ int main() {
 	double h1  = 1e-7;
 	
 	int nok = 0, nbad = 0;
-	odeint(vec_nHx, NVAR, x1, x2, eps, h1, 0, &nok, &nbad, &dnHxdt);
+	odeint(vec_nHx, NVAR, x1, x2, eps, h1, 0, &nok, &nbad, &dnHxdt, &bsstep);
 	
 	double nH2 = vec_nHx[1];
 	double nH_p = vec_nHx[2];
