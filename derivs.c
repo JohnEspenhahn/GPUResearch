@@ -5,6 +5,9 @@
 #define nSi 1.5e-5 // cm^-3
 #define nH_tot 91  // cm^-3
 
+#define TEMP 600 // K
+#define GRAIN_TEMP 50 // K
+
 #define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
 #define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1
 

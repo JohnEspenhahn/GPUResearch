@@ -3,9 +3,6 @@
 
 #include <math.h>
 
-#define TEMP 600 // K
-#define GRAIN_TEMP 50 // K
-
 #define STEP_TIME 1 // s
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
