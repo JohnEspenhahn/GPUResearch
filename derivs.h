@@ -3,19 +3,20 @@
 
 #include <math.h>
 
+#define TEMP 600 // K
+#define GRAIN_TEMP 50 // K
+
 #define STEP_TIME 1 // s
 
-void dnHxdt(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
+void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
+void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
 
-void dnH2dt(double t, double nH_p, double nH2, double *ptr_dnH2dt);
-void dnH_pdt(double t, double nH_p, double nH2, double *ptr_dnH_pdt);
-
-double getnH(double nH_p, double nH2);
-double getne(double nH_p, double nH2);
+double getnH(double nH2, double nH_p);
+double getne(double nH2, double nH_p);
 
 double k1(double temp, double temp_grain);
-double k2(double temp, double nH, double nH2);
-double k3(double temp, double nH, double nH2);
+double k2(double temp, double nH);
+double k3(double temp, double nH);
 double k6(double temp);
 double k7(double temp);
 double k8(double temp);
