@@ -1,16 +1,5 @@
 #include "derivs.h"
 
-#define nC 1.4e-4  // cm^-3
-#define nO 3.2e-4  // cm^-3
-#define nSi 1.5e-5 // cm^-3
-#define nH_tot 91  // cm^-3
-
-#define TEMP 600 // K
-#define GRAIN_TEMP 50 // K
-
-#define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
-#define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1
-
 double getnH(double nH2, double nH_p) { return nH_tot - nH_p - nH2; }
 double getne(double nH2, double nH_p) { return nH_p + nC + nSi; }
 
@@ -23,7 +12,7 @@ void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 		double ne = getne(nH2, nH_p);
 		
 		// nH2
-		vec_dnHxdt[i] = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH)*nH2*nH2; // - SELF_SHIELDING*nH2;
+		vec_dnHxdt[i] = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2; // - SELF_SHIELDING*nH2;
 		
 		// nH_p
 		vec_dnHxdt[i+1] = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne; // + COSMIC_RAY_RATE*nH;
@@ -42,7 +31,7 @@ void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 		double ne = getne(nH2, nH_p);
 		
 		// nH2
-		dfdy[i][1] = -k2(TEMP,nH)*nH - 2*k3(TEMP,nH)*nH2; // -dk3ndH2(TEMP,nH2)*nH2*nH2 // needed if k3 is actually function of nH2
+		dfdy[i][1] = -k2(TEMP,nH)*nH - 2*k3(TEMP,nH)*nH2 - dk3ndH2(TEMP,nH2)*nH2*nH2; // need dk3ndH2 if k3 is actually function of nH2
 		dfdy[i][2] = 0;
 		
 		// nH_p
@@ -67,14 +56,23 @@ double k2(double temp, double nH) {
 	
 	return STEP_TIME * kH*pow(kH/kL, -ncr/(ncr+nH));
 }
-double k3(double temp, double nH) { 
+double k3(double temp, double nH2) { 
 	double kH = 1.3e-9*exp(-5.33e4/temp);
 	double kL = 1.18e-10*exp(-6.95e4/temp);
 	
 	double log_temp = log(temp/1.0e4);
 	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
 	
-	return STEP_TIME * kH*pow(kH/kL, -ncr/(ncr+nH));
+	return STEP_TIME * kH*pow(kH/kL, -ncr/(ncr+nH2));
+}
+double dk3ndH2(double temp, double nH2) {
+	double kH = 1.3e-9*exp(-5.33e4/temp);
+	double kL = 1.18e-10*exp(-6.95e4/temp);
+	
+	double log_temp = log(temp/1.0e4);
+	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
+	
+	return k3(temp, nH2) * ((ncr*log(kH/kL)) / ((ncr+nH2)*(ncr+nH2)));
 }
 double k6(double temp) {
 	double logT = log(temp);
