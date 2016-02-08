@@ -43,7 +43,9 @@ void run(int x2) {
 	yp = matrix(1, NVAR, 1, KMAX);
 	
 	double *vec_nHx = vector(1, NVAR);
-	for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
+	vec_nHx[1] = 1;
+	vec_nHx[2] = 0;
+	// for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
 	
 	double eps = 1e-4;
 	double h1  = 1e-4;

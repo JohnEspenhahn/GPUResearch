@@ -30,12 +30,22 @@ void plotK2(FILE *fp, int steps) {
 }
 
 void plotH_p(FILE *fp, int steps) {
-	double s_H = 55, e_H = 65;
-	double s_Hp = 1, e_Hp = 91;
-	for (double nH = s_H; nH < e_H; nH += (e_H - s_H) / steps) {
-		for (double nH_p = s_Hp; nH_p < e_Hp; nH_p += (e_Hp - s_Hp) / steps) {
+	double max_H = 200;
+	for (double nH = 0; nH < max_H; nH += max_H / 75.0) { // percent hydrogen
+		for (double t = 100; t < 1000; t += 900.0 / 75.0) {
+			double nH_p = max_H - nH;
 			double ne = getne(0, nH_p);
-			fprintf(fp, "%G,%G,%G\n", nH, nH_p, k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne);
+			fprintf(fp, "%G,%G,%G\n", nH, t, k6(t)*nH*ne - k7(t)*nH_p*ne - k8(t)*nH_p*ne);
+		}
+	}
+}
+
+void plotH2(FILE *fp, int steps) {
+	double s_H = 0, e_H = 90;
+	double s_H2 = 0, e_H2 = 90;
+	for (double nH = s_H; nH < e_H; nH += (e_H - s_H) / steps) {
+		for (double nH2 = s_H2; nH2 < e_H2; nH2 += (e_H2 - s_H2) / steps) {
+			fprintf(fp, "%G,%G,%G\n", nH, nH2, k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2);
 		}
 	}
 }
@@ -44,7 +54,7 @@ void outputRates() {
 	FILE *fp = fopen("out.csv", "w");
 	// fprintf(fp, "temp,grain_temp,k1,k2,k3,k6,k7,k8\n");
 	
-	int steps = 50;
+	int steps = 75;
 	plotH_p(fp, steps);
 	
 	fclose(fp);
