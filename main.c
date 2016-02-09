@@ -38,7 +38,7 @@ int main() {
 void run(double x2) {
 	FILE *fp = fopen("out.csv", "w");
 	
-	dxsav = x2 / KMAX;
+	dxsav = x2 / (KMAX * 1.2);
 	xp = vector(1, KMAX);
 	yp = matrix(1, NVAR, 1, KMAX);
 	
@@ -55,8 +55,8 @@ void run(double x2) {
 	
 	double nH2 = vec_nHx[1];
 	double nH_p = vec_nHx[2];
-	double nH = getnH(nH_p, nH2);
-	double ne = getne(nH_p, nH2);
+	double nH = getnH(nH2, nH_p);
+	double ne = getne(nH2, nH_p);
 	
 	printf("s    = %G\n\n", (double) x2);
 	printf("nH2  = %G\n", nH2);
@@ -66,9 +66,9 @@ void run(double x2) {
 	printf("OK calls %d\n", nok);
 	printf("bad calls %d\n\n---------------------\n", nbad);
 	
-	fprintf(fp, "x,H2,H_p\n");
+	fprintf(fp, "x (Myr),H2,H_p\n");
 	for (int i = 1; i < KMAX; i++) {
-		fprintf(fp, "%G,%G,%G\n", xp[i], yp[1][i], yp[2][i]);
+		fprintf(fp, "%G,%G,%G\n", xp[i]/(60*60*24*365*1e6), yp[1][i], yp[2][i]);
 	}
 	
 	fclose(fp);
