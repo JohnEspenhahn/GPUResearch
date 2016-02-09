@@ -12,17 +12,17 @@
 int kmax = KMAX, kount = 0;
 double *xp, **yp, dxsav;
 int main() {
-	void run(int x2);
+	void run(double x2);
 	
 	char *p, s[100];
-	int x2;
+	double x2;
 	
 	do {
 		printf("Number of seconds to run (0 to quit): ");
 		p = 0;
 
 		while (fgets(s, sizeof(s), stdin)) {
-			x2 = strtol(s, &p, 10);
+			x2 = strtod(s, &p);
 			if (p == s || *p != '\n') {
 				printf("Please enter an integer: ");
 			} else break;
@@ -35,7 +35,7 @@ int main() {
 	return 0;
 }
 
-void run(int x2) {
+void run(double x2) {
 	FILE *fp = fopen("out.csv", "w");
 	
 	dxsav = x2 / KMAX;
@@ -43,12 +43,12 @@ void run(int x2) {
 	yp = matrix(1, NVAR, 1, KMAX);
 	
 	double *vec_nHx = vector(1, NVAR);
-	vec_nHx[1] = 1;
+	vec_nHx[1] = 0;
 	vec_nHx[2] = 0;
 	// for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
 	
-	double eps = 1e-4;
-	double h1  = 1e-4;
+	double eps = 1e-5;
+	double h1  = 1e-6;
 	
 	int nok = 0, nbad = 0;
 	odeint(vec_nHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
@@ -58,7 +58,7 @@ void run(int x2) {
 	double nH = getnH(nH_p, nH2);
 	double ne = getne(nH_p, nH2);
 	
-	printf("s    = %d\n\n", x2);
+	printf("s    = %G\n\n", (double) x2);
 	printf("nH2  = %G\n", nH2);
 	printf("nH_p = %G\n", nH_p);
 	printf("nH   = %G\n", nH);

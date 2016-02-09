@@ -29,10 +29,16 @@ void plotK2(FILE *fp, int steps) {
 	}
 }
 
+void plotK6(FILE *fp, int steps) { 
+	for (double i = 200; i < 1000; i += (1000.0-200.0)/steps) {
+		fprintf(fp, "%G,%G\n", i, k6(i));
+	}
+}
+
 void plotH_p(FILE *fp, int steps) {
-	double max_H = 200;
+	double max_H = 100;
 	for (double nH = 0; nH < max_H; nH += max_H / 75.0) { // percent hydrogen
-		for (double t = 100; t < 1000; t += 900.0 / 75.0) {
+		for (double t = 200; t < 1000; t += 900.0 / 75.0) {
 			double nH_p = max_H - nH;
 			double ne = getne(0, nH_p);
 			fprintf(fp, "%G,%G,%G\n", nH, t, k6(t)*nH*ne - k7(t)*nH_p*ne - k8(t)*nH_p*ne);

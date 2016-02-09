@@ -15,7 +15,7 @@ void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 		vec_dnHxdt[i] = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2; // - SELF_SHIELDING*nH2;
 		
 		// nH_p
-		vec_dnHxdt[i+1] = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne; // + COSMIC_RAY_RATE*nH;
+		vec_dnHxdt[i+1] = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne + COSMIC_RAY_RATE*nH;
 	}
 }
 
@@ -72,20 +72,10 @@ double dk3ndH2(double temp, double nH2) {
 	double log_temp = log(temp/1.0e4);
 	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
 	
-	return k3(temp, nH2) * ((ncr*log(kH/kL)) / ((ncr+nH2)*(ncr+nH2)));
+	return STEP_TIME * k3(temp, nH2) * ((ncr*log(kH/kL)) / ((ncr+nH2)*(ncr+nH2)));
 }
 double k6(double temp) {
-	double logT = log(temp);
-	
-	return STEP_TIME * exp(-32.71396786 
-				+ 13.536556*logT 
-				- 5.73932875*logT*logT 
-				+ 1.56315498*logT*logT*logT 
-				- 0.2877056*logT*logT*logT*logT
-				+ 3.48255977e-2*logT*logT*logT*logT*logT
-				- 2.63197617e-3*logT*logT*logT*logT*logT*logT
-				+ 1.11954395e-4*logT*logT*logT*logT*logT*logT*logT
-				- 2.03914985e-6*logT*logT*logT*logT*logT*logT*logT*logT);
+	return STEP_TIME * 5.466e-9*1.07*sqrt(temp/1.0e4)*exp(-13.6/(8.6173e-5*temp));
 }
 double k7(double temp) {
 	return STEP_TIME * 2.54e-13*pow(temp/1.0e4, -0.8163 - 0.0208*log(temp/1.0e4));

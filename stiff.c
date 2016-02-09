@@ -1,7 +1,7 @@
 #include "stiff.h"
 #include "oiutil.h"
 
-#define MAXTRY 100 // default 40
+#define MAXTRY 40 // default 40
 
 #define SAFETY 0.9
 #define GROW 1.5
