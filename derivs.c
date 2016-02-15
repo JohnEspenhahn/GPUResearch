@@ -1,6 +1,18 @@
 #include "derivs.h"
 
-double getnH(double nH2, double nH_p) { return nH_tot - nH_p - nH2; }
+int NH_TOT = NH_TOT_INIT, TEMP = TEMP_INIT, GRAIN_TEMP = GRAIN_TEMP_INIT;
+
+
+double getnH_tot() { return NH_TOT; }
+void setnH_tot(int t) { if (t > 0) NH_TOT = t; }
+
+double getTemp() { return TEMP; }
+void setTemp(int t) { if (t > 0) TEMP = t; }
+
+double getGrainTemp() { return GRAIN_TEMP; }
+void setGrainTemp(int t) { if (t > 0) GRAIN_TEMP = t; }
+
+double getnH(double nH2, double nH_p) { return NH_TOT - nH_p - nH2; }
 double getne(double nH2, double nH_p) { return nH_p + nC + nSi; }
 
 // run a step of the derivatives
@@ -32,6 +44,7 @@ void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 		
 		// nH2
 		dfdy[i][1] = -k2(TEMP,nH)*nH - 2*k3(TEMP,nH)*nH2 - dk3ndH2(TEMP,nH2)*nH2*nH2; // need dk3ndH2 if k3 is actually function of nH2
+		if (!isfinite(dfdy[i][1])) dfdy[i][1] = -2.47E-232;
 		dfdy[i][2] = 0;
 		
 		// nH_p

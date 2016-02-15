@@ -1,4 +1,4 @@
-SOURCE=odeint.h odeint.c nrutil.h nrutil.c stiff.h stiff.c stifbs.h stifbs.c derivs.h derivs.c oiutil.h oiutil.c
+SOURCE=odeint.h odeint.c nrutil.h nrutil.c stiff.h stiff.c stifbs.h stifbs.c derivs.h derivs.c oiutil.h oiutil.c simulation.c simulation.h
 FLAGS=-Wno-unused-variable -std=c99
 DEBUG=-g
 

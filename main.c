@@ -1,18 +1,7 @@
-#include "odeint.h"
-#include "derivs.h"
-#include "stiff.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "simulation.h"
 
-#define ZONES 1
-#define NVAR 2*ZONES
-
-#define KMAX 255
-
-int kmax = KMAX, kount = 0;
-double *xp, **yp, dxsav;
 int main() {
-	void run(double x2);
+	FILE *fp = fopen("out.csv", "w");
 	
 	char *p, s[100];
 	double x2;
@@ -28,48 +17,11 @@ int main() {
 			} else break;
 		}
 		
-		if (x2 > 0) run(x2);
+		if (x2 > 0) run(fp, x2);
 		else break;
 	} while (1);
 	
-	return 0;
-}
-
-void run(double x2) {
-	FILE *fp = fopen("out.csv", "w");
-	
-	dxsav = x2 / (KMAX * 1.2);
-	xp = vector(1, KMAX);
-	yp = matrix(1, NVAR, 1, KMAX);
-	
-	double *vec_nHx = vector(1, NVAR);
-	vec_nHx[1] = 0;
-	vec_nHx[2] = 0;
-	// for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
-	
-	double eps = 1e-5;
-	double h1  = 1e-6;
-	
-	int nok = 0, nbad = 0;
-	odeint(vec_nHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
-	
-	double nH2 = vec_nHx[1];
-	double nH_p = vec_nHx[2];
-	double nH = getnH(nH2, nH_p);
-	double ne = getne(nH2, nH_p);
-	
-	printf("s    = %G\n\n", (double) x2);
-	printf("nH2  = %G\n", nH2);
-	printf("nH_p = %G\n", nH_p);
-	printf("nH   = %G\n", nH);
-	printf("ne   = %G\n\n", ne);
-	printf("OK calls %d\n", nok);
-	printf("bad calls %d\n\n---------------------\n", nbad);
-	
-	fprintf(fp, "x (Myr),H2,H_p\n");
-	for (int i = 1; i < KMAX; i++) {
-		fprintf(fp, "%G,%G,%G\n", xp[i]/(60*60*24*365*1e6), yp[1][i], yp[2][i]);
-	}
-	
 	fclose(fp);
+	
+	return 0;
 }

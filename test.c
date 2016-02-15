@@ -3,11 +3,7 @@
 #include "odeint.h"
 #include "stiff.h"
 #include <stdio.h>
-
-#define KMAX 0
-
-int kmax = KMAX, kount = 0;
-double *xp, **yp, dxsav = 100;
+#include "simulation.h"
 
 void plotK1(FILE *fp, int steps) {
 	double start_temp = 200, end_temp = 1000;
@@ -47,11 +43,43 @@ void plotH_p(FILE *fp, int steps) {
 }
 
 void plotH2(FILE *fp, int steps) {
-	double s_H = 0, e_H = 90;
-	double s_H2 = 0, e_H2 = 90;
-	for (double nH = s_H; nH < e_H; nH += (e_H - s_H) / steps) {
-		for (double nH2 = s_H2; nH2 < e_H2; nH2 += (e_H2 - s_H2) / steps) {
-			fprintf(fp, "%G,%G,%G\n", nH, nH2, k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2);
+	double max_H = 200;
+	double max_t = 700;
+	for (double nH = 10; nH < max_H; nH += max_H / 75.0) { // percent hydrogen
+		for (double t = 50; t < max_t; t += max_t / 75.0) {
+			double nH_p = max_H - nH;
+			double nH2 = max_H / 2.0;
+			fprintf(fp, "%G,%G,%G\n", nH, t, k1(t, getGrainTemp())*nH*nH - k2(t,nH)*nH2*nH - k3(t,nH2)*nH2*nH2);
+		}
+	}
+}
+
+void plotJacobn(FILE *fp, int steps) {
+	double *vec_nHx = vector(1,2);
+	vec_nHx[1] = 1e1;
+	vec_nHx[2] = 1e-3;
+	
+	double *dfdx = vector(1,2);
+	double **dfdy = matrix(1,2,1,2);
+	
+	for (int temp = 1; temp < 700; temp += 20) {
+		for (int grain = 1; grain < 100; grain += 10) {
+			setTemp(temp);
+			setGrainTemp(grain);
+			jacobn(0, vec_nHx, dfdx, dfdy, 2);
+			
+			fprintf(fp, "%G,%G\n", dfdy[1][1], dfdy[2][2]);
+		}
+	}
+}
+
+void plotRuns(FILE *fp, int _) {
+	int init = 70, max = 1000;
+	for (int j = init; j < max; j += (max - init) / 30) {
+		for (int i = 10; i < 100; i += 100 / 25) {
+			setTemp(j);
+			setGrainTemp(i);
+			run(fp, 5e14);
 		}
 	}
 }
@@ -61,7 +89,7 @@ void outputRates() {
 	// fprintf(fp, "temp,grain_temp,k1,k2,k3,k6,k7,k8\n");
 	
 	int steps = 75;
-	plotH_p(fp, steps);
+	plotRuns(fp, steps);
 	
 	fclose(fp);
 }

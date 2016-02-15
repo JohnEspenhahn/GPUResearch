@@ -2,22 +2,33 @@
 #define _DERIVS_H_
 
 #include <math.h>
+#include <float.h>
+// #include <cmath.h>
 
 #define nC 1.4e-4  // cm^-3
 #define nO 3.2e-4  // cm^-3
 #define nSi 1.5e-5 // cm^-3
-#define nH_tot 91  // cm^-3
+#define NH_TOT_INIT 500  // cm^-3
 
-#define TEMP 600 // K
-#define GRAIN_TEMP 50 // K
+#define TEMP_INIT 70 // K
+#define GRAIN_TEMP_INIT 70 // K
 
 #define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
-#define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1
+#define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1 try  try 1.8e-17
 
 #define STEP_TIME 1 // s
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
+
+double getnH_tot();
+void setnH_tot(int t);
+
+double getTemp();
+void setTemp(int t);
+
+double getGrainTemp();
+void setGrainTemp(int t);
 
 double getnH(double nH2, double nH_p);
 double getne(double nH2, double nH_p);
