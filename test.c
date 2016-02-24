@@ -6,8 +6,8 @@
 #include "simulation.h"
 
 void plotK1(FILE *fp, int steps) {
-	double start_temp = 200, end_temp = 1000;
-	double start_grain_temp = 10, end_grain_temp = 100;
+	double start_temp = 10, end_temp = 200;
+	double start_grain_temp = 10, end_grain_temp = 60;
 	for (double i = start_temp; i < end_temp; i += (end_temp - start_temp) / steps) {
 		for (double j = start_grain_temp; j < end_grain_temp; j += (end_grain_temp - start_grain_temp) / steps) {
 			fprintf(fp, "%G,%G,%G\n", i, j, k1(i,j));
@@ -16,11 +16,31 @@ void plotK1(FILE *fp, int steps) {
 }
 
 void plotK2(FILE *fp, int steps) {
-	double start_temp = 595, end_temp = 605;
-	double start_nH = 20, end_nH = 100;
+	double start_temp = 10, end_temp = 200;
+	double start_nH = 0, end_nH = 200;
 	for (double i = start_temp; i < end_temp; i += (end_temp - start_temp) / steps) {
 		for (double j = start_nH; j < end_nH; j += (end_nH - start_nH) / steps) {
 			fprintf(fp, "%G,%G,%G\n", i, j, k2(i,j));
+		}
+	}
+}
+
+void plotK3(FILE *fp, int steps) {
+	double start_temp = 10, end_temp = 200;
+	double start_nH2 = 0, end_nH2 = 200;
+	for (double i = start_temp; i < end_temp; i += (end_temp - start_temp) / steps) {
+		for (double j = start_nH2; j < end_nH2; j += (end_nH2 - start_nH2) / steps) {
+			fprintf(fp, "%G,%G,%G\n", i, j, k3(i,j));
+		}
+	}
+}
+
+void plotdk3ndH2(FILE *fp, int steps) {
+	double start_temp = 10, end_temp = 200;
+	double start_nH2 = 0, end_nH2 = 200;
+	for (double i = start_temp; i < end_temp; i += (end_temp - start_temp) / steps) {
+		for (double j = start_nH2; j < end_nH2; j += (end_nH2 - start_nH2) / steps) {
+			fprintf(fp, "%G,%G,%G\n", i, j, dk3ndH2(i,j));
 		}
 	}
 }
@@ -32,24 +52,20 @@ void plotK6(FILE *fp, int steps) {
 }
 
 void plotH_p(FILE *fp, int steps) {
-	double max_H = 100;
-	for (double nH = 0; nH < max_H; nH += max_H / 75.0) { // percent hydrogen
-		for (double t = 200; t < 1000; t += 900.0 / 75.0) {
-			double nH_p = max_H - nH;
-			double ne = getne(0, nH_p);
-			fprintf(fp, "%G,%G,%G\n", nH, t, k6(t)*nH*ne - k7(t)*nH_p*ne - k8(t)*nH_p*ne);
-		}
+	double nH = 400;
+	for (double t = 50; t < 600; t += 10) {
+		double nH_p = 1e-4;
+		double ne = 1e-4;
+		fprintf(fp, "%G,%G,%G\n", nH, t, k6(t)*nH*ne - k7(t)*nH_p*ne - k8(t)*nH_p*ne);
 	}
 }
 
 void plotH2(FILE *fp, int steps) {
-	double max_H = 200;
-	double max_t = 700;
-	for (double nH = 10; nH < max_H; nH += max_H / 75.0) { // percent hydrogen
-		for (double t = 50; t < max_t; t += max_t / 75.0) {
-			double nH_p = max_H - nH;
-			double nH2 = max_H / 2.0;
-			fprintf(fp, "%G,%G,%G\n", nH, t, k1(t, getGrainTemp())*nH*nH - k2(t,nH)*nH2*nH - k3(t,nH2)*nH2*nH2);
+	double nH = 400;
+	for (double t = 50; t < 600; t += 5) {
+		for (double gt = 20; gt < 100; gt += 5) {
+			double nH2 = 100;
+			fprintf(fp, "%G,%G,%G,%G\n", nH, t, gt, k1(t, gt)*nH*nH - k2(t,nH)*nH2*nH - k3(t,nH2)*nH2*nH2);
 		}
 	}
 }
@@ -73,14 +89,11 @@ void plotJacobn(FILE *fp, int steps) {
 	}
 }
 
-void plotRuns(FILE *fp, int _) {
-	int init = 70, max = 1000;
-	for (int j = init; j < max; j += (max - init) / 30) {
-		for (int i = 10; i < 100; i += 100 / 25) {
-			setTemp(j);
-			setGrainTemp(i);
-			run(fp, 5e14);
-		}
+void plotRuns(FILE *fp, int steps) {
+	int init = 75, max = 200;
+	for (int j = init; j < max; j += (max - init) / steps) {
+		setTemp(j);
+		run(fp, 5e14);
 	}
 }
 
@@ -89,7 +102,9 @@ void outputRates() {
 	// fprintf(fp, "temp,grain_temp,k1,k2,k3,k6,k7,k8\n");
 	
 	int steps = 75;
-	plotRuns(fp, steps);
+	// plotRuns(fp, steps);
+	
+	dk3ndH2(73.3333, 200);
 	
 	fclose(fp);
 }

@@ -17,7 +17,7 @@ int main() {
 			} else break;
 		}
 		
-		if (x2 > 0) run(fp, x2);
+		if (x2 > 0) run(fp, x2, true);
 		else break;
 	} while (1);
 	

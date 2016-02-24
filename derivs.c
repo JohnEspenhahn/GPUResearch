@@ -24,7 +24,7 @@ void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 		double ne = getne(nH2, nH_p);
 		
 		// nH2
-		vec_dnHxdt[i] = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2; // - SELF_SHIELDING*nH2;
+		vec_dnHxdt[i] = k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH)*nH2*nH - k3(TEMP,nH2)*nH2*nH2 - SELF_SHIELDING*nH2;
 		
 		// nH_p
 		vec_dnHxdt[i+1] = k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP)*nH_p*ne + COSMIC_RAY_RATE*nH;
@@ -43,8 +43,7 @@ void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 		double ne = getne(nH2, nH_p);
 		
 		// nH2
-		dfdy[i][1] = -k2(TEMP,nH)*nH - 2*k3(TEMP,nH)*nH2 - dk3ndH2(TEMP,nH2)*nH2*nH2; // need dk3ndH2 if k3 is actually function of nH2
-		if (!isfinite(dfdy[i][1])) dfdy[i][1] = -2.47E-232;
+		dfdy[i][1] = -k2(TEMP,nH)*nH - 2*k3(TEMP,nH)*nH2 - dk3ndH2(TEMP,nH2)*nH2*nH2 - SELF_SHIELDING; // need dk3ndH2 if k3 is actually function of nH2
 		dfdy[i][2] = 0;
 		
 		// nH_p
@@ -64,14 +63,18 @@ double k2(double temp, double nH) {
 	double kH = 1.2e-9*exp(-5.24e4/temp);
 	double kL = 1.12e-10*exp(-7.035e4/temp);
 	
+	if (kL == 0) return 0;
+	
 	double log_temp = log(temp/1.0e4);
 	double ncr = exp(4.0 - 0.416*log_temp - 0.327*log_temp*log_temp);
 	
 	return STEP_TIME * kH*pow(kH/kL, -ncr/(ncr+nH));
 }
 double k3(double temp, double nH2) { 
-	double kH = 1.3e-9*exp(-5.33e4/temp);
+	double kH = 1.3e-9*exp(-5.33e4/temp);	
 	double kL = 1.18e-10*exp(-6.95e4/temp);
+	
+	if (kL == 0) return 0;
 	
 	double log_temp = log(temp/1.0e4);
 	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
@@ -79,8 +82,10 @@ double k3(double temp, double nH2) {
 	return STEP_TIME * kH*pow(kH/kL, -ncr/(ncr+nH2));
 }
 double dk3ndH2(double temp, double nH2) {
-	double kH = 1.3e-9*exp(-5.33e4/temp);
+	double kH = 1.3e-9*exp(-5.33e4/temp);	
 	double kL = 1.18e-10*exp(-6.95e4/temp);
+	
+	if (kL == 0) return 0;
 	
 	double log_temp = log(temp/1.0e4);
 	double ncr = exp(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
