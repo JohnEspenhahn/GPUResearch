@@ -1,8 +1,5 @@
 #include "simulation.h"
 
-#define ZONES 1
-#define NVAR 2*ZONES
-
 int kmax = KMAX, kount = 0;
 double *xp, **yp, dxsav;
 
