@@ -7,20 +7,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Equation {
-	private static final Pattern elements = Pattern.compile("([A-Za-z][a-z]*)([0-9]?[\\-\\+]?)");
+	private static final Pattern elements = Pattern.compile("([A-Za-z][a-z]*)([0-9]?_?[mp]?)");
 	
-	int id;
-	String streq;
-	Map<String, Byte> reactants;
-	Map<String, Byte> products;
-	Map<String, Byte> net_products;
+	private int id;
+	private String streq;
+	private Map<String, Byte> reactants;
+	private Map<String, Byte> products;
+	private Map<String, EquationProduct> net_products;
 	
 	public Equation(int id, String streq) {
 		this.id = id;
 		this.streq = streq;
 		this.reactants = new HashMap<String, Byte>();
 		this.products = new HashMap<String, Byte>();
-		this.net_products = new HashMap<String, Byte>();
+		this.net_products = new HashMap<String, EquationProduct>();
 		
 		String[] rp = streq.trim().split("=");
 		parseElements(rp[0], reactants, -1, net_products);
@@ -42,28 +42,31 @@ public class Equation {
 		}
 	}
 	
-	private void parseElements(String eq, Map<String, Byte> map, int species_add, Map<String, Byte> species_map) {
-		for (String entry: eq.split("\\s+")) {
-			Matcher matcher = elements.matcher(entry);
+	private void parseElements(String eq, Map<String, Byte> map, int species_add, Map<String, EquationProduct> species_map) {
+		for (String species: eq.split("\\s+")) {
+			// Track species
+			EquationProduct oldSpeciesCount = species_map.get(species);
+			if (oldSpeciesCount == null) {
+				oldSpeciesCount = new EquationProduct();
+				species_map.put(species, oldSpeciesCount);
+			}
+			oldSpeciesCount.add(species_add);
+			
+			// Track elements
+			Matcher matcher = elements.matcher(species);
 			while (matcher.find()) {
-				String species = matcher.group();
 				String element = matcher.group(1);
 				String count   = matcher.group(2);
 				
-				// Track species
-				Byte oldSpeciesCount = species_map.get(species);
-				if (oldSpeciesCount == null) oldSpeciesCount = 0;
-				species_map.put(species, (byte) (oldSpeciesCount + species_add));
-				
 				// Check charge
-				if (count != null && (count.endsWith("-") || count.endsWith("+"))) {
+				if (count != null && (count.endsWith("m") || count.endsWith("p"))) {
 					Byte oldCharge = map.get("e");
 					if (oldCharge == null) oldCharge = 0;
 					
-					if (count.endsWith("-")) map.put("e", (byte) (oldCharge + 1));
+					if (count.endsWith("m")) map.put("e", (byte) (oldCharge + 1));
 					else map.put("e", (byte) (oldCharge - 1));
 					
-					count = count.substring(0, count.length()-1);
+					count = count.substring(0, count.length()-2);
 				}
 				
 				// Check count
@@ -80,12 +83,33 @@ public class Equation {
 		}
 	}
 	
-	public String toString() {
-		String str = "";
-		for (Entry<String, Byte> element: net_products.entrySet()) {
-			str += element.getKey() + ":" + element.getValue() + ",";
+	public int contains(String species) {
+		EquationProduct p = net_products.get(species);
+		return (p == null ? 0 : p.getNetProduction());
+	}
+	
+	public String asODEEntry() {
+		String str = "k" + id + "(t)";
+		for (Entry<String, EquationProduct> e: net_products.entrySet()) {
+			EquationProduct amnt = e.getValue();
+			if (amnt.isReactant()) {
+				str += "*";
+				if (amnt.getDistruction() > 1) {
+					str += amnt.getDistruction() + "*";
+				}
+				str += "p" + e.getKey();
+			}
 		}
 		
-		return id + " " + streq + " ; " + str;
+		return str;
+	}
+	
+	public String toString() {
+		String str = "";
+		for (Entry<String, EquationProduct> element: net_products.entrySet()) {
+			str += element.getKey() + ":" + element.getValue().getNetProduction() + ",";
+		}
+		
+		return "" + id + " " + streq + " ; " + str;
 	}
 }

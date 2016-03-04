@@ -1,0 +1,495 @@
+double k1(double t) {
+	return 
+}
+double k2(double t) {
+	return 
+}
+double k3(double t) {
+	return 
+}
+double k4(double t) {
+	return 
+}
+double k5(double t) {
+	return 
+}
+double k6(double t) {
+	return 
+}
+double k7(double t) {
+	return 
+}
+double k8(double t) {
+	return 
+}
+double k9(double t) {
+	return 
+}
+double k10(double t) {
+	return 
+}
+double k11(double t) {
+	return 
+}
+double k12(double t) {
+	return 
+}
+double k13(double t) {
+	return 
+}
+double k14(double t) {
+	return 
+}
+double k15(double t) {
+	return 
+}
+double k16(double t) {
+	return 
+}
+double k17(double t) {
+	return 
+}
+double k18(double t) {
+	return 
+}
+double k19(double t) {
+	return 
+}
+double k20(double t) {
+	return 
+}
+double k21(double t) {
+	return 
+}
+double k22(double t) {
+	return 
+}
+double k23(double t) {
+	return 
+}
+double k24(double t) {
+	return 
+}
+double k25(double t) {
+	return 
+}
+double k26(double t) {
+	return 
+}
+double k27(double t) {
+	return 
+}
+double k28(double t) {
+	return 
+}
+double k29(double t) {
+	return 
+}
+double k30(double t) {
+	return 
+}
+double k31(double t) {
+	return 
+}
+double k32(double t) {
+	return 
+}
+double k33(double t) {
+	return 
+}
+double k34(double t) {
+	return 
+}
+double k35(double t) {
+	return 
+}
+double k36(double t) {
+	return 
+}
+double k37(double t) {
+	return 
+}
+double k38(double t) {
+	return 
+}
+double k39(double t) {
+	return 
+}
+double k40(double t) {
+	return 
+}
+double k41(double t) {
+	return 
+}
+double k42(double t) {
+	return 
+}
+double k43(double t) {
+	return 
+}
+double k44(double t) {
+	return 
+}
+double k45(double t) {
+	return 
+}
+double k46(double t) {
+	return 
+}
+double k47(double t) {
+	return 
+}
+double k48(double t) {
+	return 
+}
+double k49(double t) {
+	return 
+}
+double k50(double t) {
+	return 
+}
+double k51(double t) {
+	return 
+}
+double k52(double t) {
+	return 
+}
+double k53(double t) {
+	return 
+}
+double k54(double t) {
+	return 
+}
+double k55(double t) {
+	return 
+}
+double k56(double t) {
+	return 
+}
+double k57(double t) {
+	return 
+}
+double k58(double t) {
+	return 
+}
+double k59(double t) {
+	return 
+}
+double k60(double t) {
+	return 
+}
+double k61(double t) {
+	return 
+}
+double k62(double t) {
+	return 
+}
+double k63(double t) {
+	return 
+}
+double k64(double t) {
+	return 
+}
+double k65(double t) {
+	return 
+}
+double k66(double t) {
+	return 
+}
+double k67(double t) {
+	return 
+}
+double k68(double t) {
+	return 
+}
+double k69(double t) {
+	return 
+}
+double k70(double t) {
+	return 
+}
+double k71(double t) {
+	return 
+}
+double k72(double t) {
+	return 
+}
+double k73(double t) {
+	return 
+}
+double k74(double t) {
+	return 
+}
+double k75(double t) {
+	return 
+}
+double k76(double t) {
+	return 
+}
+double k77(double t) {
+	return 
+}
+double k78(double t) {
+	return 
+}
+double k79(double t) {
+	return 
+}
+double k80(double t) {
+	return 
+}
+double k81(double t) {
+	return 
+}
+double k82(double t) {
+	return 
+}
+double k83(double t) {
+	return 
+}
+double k84(double t) {
+	return 
+}
+double k85(double t) {
+	return 
+}
+double k86(double t) {
+	return 
+}
+double k87(double t) {
+	return 
+}
+double k88(double t) {
+	return 
+}
+double k89(double t) {
+	return 
+}
+double k90(double t) {
+	return 
+}
+double k91(double t) {
+	return 
+}
+double k92(double t) {
+	return 
+}
+double k93(double t) {
+	return 
+}
+double k94(double t) {
+	return 
+}
+double k95(double t) {
+	return 
+}
+double k96(double t) {
+	return 
+}
+double k97(double t) {
+	return 
+}
+double k98(double t) {
+	return 
+}
+double k99(double t) {
+	return 
+}
+double k100(double t) {
+	return 
+}
+double k101(double t) {
+	return 
+}
+double k102(double t) {
+	return 
+}
+double k103(double t) {
+	return 
+}
+double k104(double t) {
+	return 
+}
+double k105(double t) {
+	return 
+}
+double k106(double t) {
+	return 
+}
+double k107(double t) {
+	return 
+}
+double k108(double t) {
+	return 
+}
+double k109(double t) {
+	return 
+}
+double k110(double t) {
+	return 
+}
+double k111(double t) {
+	return 
+}
+double k112(double t) {
+	return 
+}
+double k113(double t) {
+	return 
+}
+double k114(double t) {
+	return 
+}
+double k115(double t) {
+	return 
+}
+double k116(double t) {
+	return 
+}
+double k117(double t) {
+	return 
+}
+double k118(double t) {
+	return 
+}
+double k119(double t) {
+	return 
+}
+double k120(double t) {
+	return 
+}
+double k121(double t) {
+	return 
+}
+double k122(double t) {
+	return 
+}
+double k123(double t) {
+	return 
+}
+double k124(double t) {
+	return 
+}
+double k125(double t) {
+	return 
+}
+double k126(double t) {
+	return 
+}
+double k127(double t) {
+	return 
+}
+double k128(double t) {
+	return 
+}
+double k129(double t) {
+	return 
+}
+double k130(double t) {
+	return 
+}
+double k131(double t) {
+	return 
+}
+double k132(double t) {
+	return 
+}
+double k133(double t) {
+	return 
+}
+double k134(double t) {
+	return 
+}
+double k135(double t) {
+	return 
+}
+double k136(double t) {
+	return 
+}
+double k137(double t) {
+	return 
+}
+double k138(double t) {
+	return 
+}
+double k139(double t) {
+	return 
+}
+double k140(double t) {
+	return 
+}
+double k141(double t) {
+	return 
+}
+double k142(double t) {
+	return 
+}
+double k143(double t) {
+	return 
+}
+double k144(double t) {
+	return 
+}
+double k145(double t) {
+	return 
+}
+double k146(double t) {
+	return 
+}
+double k147(double t) {
+	return 
+}
+double k148(double t) {
+	return 
+}
+double k149(double t) {
+	return 
+}
+double k150(double t) {
+	return 
+}
+double k151(double t) {
+	return 
+}
+double k152(double t) {
+	return 
+}
+double k153(double t) {
+	return 
+}
+double k154(double t) {
+	return 
+}
+double k155(double t) {
+	return 
+}
+double k156(double t) {
+	return 
+}
+double k157(double t) {
+	return 
+}
+double k158(double t) {
+	return 
+}
+double k159(double t) {
+	return 
+}
+double k160(double t) {
+	return 
+}
+double k161(double t) {
+	return 
+}
+double k162(double t) {
+	return 
+}
+double k163(double t) {
+	return 
+}
+double k164(double t) {
+	return 
+}
+double k165(double t) {
+	return 
+}

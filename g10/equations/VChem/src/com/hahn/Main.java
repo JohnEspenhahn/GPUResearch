@@ -1,23 +1,41 @@
 package com.hahn;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Main {
 	static List<Equation> equations;
-	static Map<String, List<Equation>> ode_eqs;
+	static Map<String, ODEEntry> ode_eqs;
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		equations = new ArrayList<Equation>();
-		ode_eqs = new HashMap<String, List<Equation>>();
+		ode_eqs = new HashMap<String, ODEEntry>();
+		ode_eqs.put("H_p", new ODEEntry());
+		ode_eqs.put("H2", new ODEEntry());
+		ode_eqs.put("He_p", new ODEEntry());
+		ode_eqs.put("C_p", new ODEEntry());
+		ode_eqs.put("O_p", new ODEEntry());
+		ode_eqs.put("OH", new ODEEntry());
+		ode_eqs.put("H2O", new ODEEntry());
+		ode_eqs.put("CO", new ODEEntry());
+		ode_eqs.put("C2", new ODEEntry());
+		ode_eqs.put("O2", new ODEEntry());
+		ode_eqs.put("HCO_p", new ODEEntry());
+		ode_eqs.put("CH", new ODEEntry());
+		ode_eqs.put("CH2", new ODEEntry());
+		ode_eqs.put("CH3_p", new ODEEntry());
 		
-		File f = new File("equations.csv");
-		Scanner s = new Scanner(f);
+		
+		Scanner s = new Scanner(new File("equations.csv"));
 		
 		int i = 1;
 		while (s.hasNextLine()) {
@@ -26,7 +44,16 @@ public class Main {
 				Equation eq = new Equation(i, streq);
 				equations.add(eq);
 				
-				System.out.println(eq);
+				for (Entry<String, ODEEntry> ode: ode_eqs.entrySet()) {
+					int contains = eq.contains(ode.getKey());
+					if (contains > 0) {
+						ode.getValue().addCreationEq(eq);
+					} else if (contains < 0) {
+						ode.getValue().addDistructionEq(eq);
+					}
+				}
+				
+				// System.out.println(eq);
 			} catch (Exception e) {
 				System.err.println(i + " " + streq);
 			}
@@ -35,6 +62,15 @@ public class Main {
 		}
 		
 		s.close();
+		
+		File f = new File("out.txt");
+		if (f.exists()) f.delete();
+		
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f.getCanonicalPath(), true)));
+		for (Entry<String, ODEEntry> ode: ode_eqs.entrySet()) {
+			out.println(ode.toString());		    
+		}
+		out.close();
 	}
 	
 }
