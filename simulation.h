@@ -2,7 +2,6 @@
 #define _simulation_h_
 
 #include "odeint.h"
-#include "gml/derivs.h"
 #include "stiff.h"
 #include <stdlib.h>
 #include <stdio.h>
