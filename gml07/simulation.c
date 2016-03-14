@@ -13,8 +13,8 @@ void run(FILE *fp, double x2, bool print) {
 	yp = matrix(1, NVAR, 1, KMAX);
 	
 	double *vec_pHx = vector(1, NVAR);
-	vec_pHx[1] = 0;
-	vec_pHx[2] = 0;
+	vec_pHx[1] = 5;
+	vec_pHx[2] = 5;
 	// for (int i = 1; i <= NVAR; i++) { vec_pHx[i] = 0; }
 	
 	double eps = 1e-5;

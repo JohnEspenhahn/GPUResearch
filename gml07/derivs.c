@@ -8,10 +8,10 @@ void setTemp(int t) { if (t > 0) TEMP = t; }
 double getGrainTemp() { return GRAIN_TEMP; }
 void setGrainTemp(int t) { if (t > 0) GRAIN_TEMP = t; }
 
-double getnH(double pH2, double pH_p) { return xH_tot*N_TOT - ((pH2+pH_p)/(1.36*M_h)); }
+double getnH(double pH2, double pH_p) { return xH_tot*N_TOT - (pH_p+pH2)/(1.36*M_h); }
 
 /** Takes mass density of H2 and converts to number density */
-double getnH2(double pH2) { return pH2 / (2.72 * M_h); }
+double getnH2(double pH2) { return pH2 / (2 * 1.36 * M_h); }
 
 /** Takes mass density of H+ and converts to number density */
 double getnH_p(double pH_p) { return pH_p / (1.36 * M_h); }
@@ -20,7 +20,7 @@ double getnH_p(double pH_p) { return pH_p / (1.36 * M_h); }
 double getxH2(double pH2) { return (2*getnH2(pH2)) / N_TOT; }
 
 /** Takes mass density of H_p and converts to abundance */
-double getxH_p(double pH_p) { return getnH_p(pH_p) / N_TOT; }
+double getxH_p(double pH_p) { return pH_p / (N_TOT * 1.36 * M_h); }
 
 /** Gets the total adundance of hydrogen nuclei */
 double getxH_tot() { return xH_tot; }
@@ -31,7 +31,7 @@ double getxH(double pH2, double pH_p) {
 }
 
 /** Derives the mass density of atomic hydrogen based on mass densities of H2 and H+ */
-double getpH(double pH2, double pH_p) { return (getxH(pH2, pH_p) * N_TOT) * 1.36 * M_h; };
+double getpH(double pH2, double pH_p) { return getxH(pH2, pH_p) * N_TOT * 1.36 * M_h; };
 
 /** Derives the abundance of e- based on the mass densities of H2 and H+ */
 double getxe(double pH_p) { 
@@ -44,15 +44,17 @@ double getne(double pH_p) {
 }
 
 // run a step of the derivatives
-void derivs(double t, int nvar, double vec_pHx[], double vec_dpHxdt[]) {
+void derivs(double x, int nvar, double vec_pHx[], double vec_dpHxdt[]) {
 	for (int i = 1; i <= nvar; i += 2) {
 		double pH2 = vec_pHx[i];
 		double pH_p = vec_pHx[i+1];
 		double pH = getpH(pH2, pH_p); 
+		double nH = getnH(pH2, pH_p);
+		double nH2 = getnH2(pH2);
 		double ne = getne(pH_p);
 		
 		// pH2
-		vec_dpHxdt[i] = k1(TEMP, GRAIN_TEMP)*pH*pH - k2(TEMP,pH2,pH_p)*pH2*pH - k3(TEMP,pH2,pH_p)*pH2*pH2 - SELF_SHIELDING*pH2;
+		vec_dpHxdt[i] = k1(TEMP, GRAIN_TEMP)*pH*nH - k2(TEMP,pH2,pH_p)*pH2*nH - k3(TEMP,pH2,pH_p)*pH2*nH2 + SELF_SHIELDING*pH2;
 		
 		// pH_p
 		vec_dpHxdt[i+1] = k6(TEMP)*pH*ne - k7(TEMP)*pH_p*ne - k8(TEMP,ne)*pH_p*ne + COSMIC_RAY_RATE*pH;
@@ -67,19 +69,22 @@ void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 		
 		double pH2 = vec_pHx[i];
 		double pH_p = vec_pHx[i+1];
-		double pH = getpH(pH2, pH_p); 
+		double pH = getpH(pH2, pH_p);
+		double nH = getnH(pH2, pH_p);
+		double nH2 = getnH2(pH2);
+		double dnH = -1/(1.36*M_h);
 		double ne = getne(pH_p);
+		double dne = 1/(1.36*M_h);
 		
 		// dpH2 / dpH2
-		double dpHpH2dpH2 = N_TOT*1.36*M_h*xH_tot - pH_p - 2*pH2; // derivative of expanded pH(pH2)*pH2 with respect to pH2
-		dfdy[i][1] = -2*k1(TEMP,GRAIN_TEMP)*pH - k2(TEMP,pH2,pH_p)*dpHpH2dpH2 - pH*pH2*dk2dh2(TEMP,pH2,pH_p) -2*k3(TEMP,pH2,pH_p)*pH2 - pH2*pH2*dk3dh2(TEMP,pH2,pH_p);
+		dfdy[i][1] = k1(TEMP, GRAIN_TEMP)*dnH*pH - k2(TEMP, pH2, pH_p)*nH - nH2*k3(TEMP, pH2, pH_p) - k1(TEMP, GRAIN_TEMP)*nH - pH2*dk2dh2(TEMP, pH2, pH_p)*nH - pH2*dnH*k2(TEMP, pH2, pH_p) - pH2*nH2*dk3dh2(TEMP, pH2, pH_p) - pH2*k3(TEMP, pH2, pH_p)/(2.72*M_h);
 		// dpH2 / dpH+
-		dfdy[i][2] = -2*k1(TEMP,GRAIN_TEMP)*pH + k2(TEMP,pH2,pH_p)*pH2 - pH*pH2*dk2dh_p(TEMP,pH2,pH_p) - pH2*pH2*dk3dh_p(TEMP,pH2,pH_p);
+		dfdy[i][2] = k1(TEMP, GRAIN_TEMP)*dnH*pH - k1(TEMP, GRAIN_TEMP)*nH - pH2*dk2dh_p(TEMP, pH2, pH_p)*nH - pH2*dnH*k2(TEMP, pH2, pH_p) - pH2*nH2*dk3dh_p(TEMP, pH2, pH_p);
 		
 		// dpH+ / dpH2
-		dfdy[i+1][1] = k6(TEMP)*(-2*pH_p)/(2.72*M_h);
-		// dpH+ / dpH+
-		dfdy[i+1][2] = k6(TEMP)*(xH_tot*N_TOT - 2*pH_p - (2*pH2)/(2.72*M_h)) - k7(TEMP)*(2*pH_p)/(1.36*M_h) - pH_p*(2*k8(TEMP,pH_p) + ne*dk8dph_p(TEMP,pH_p))/(1.36*M_h);
+		dfdy[i+1][1] = -k6(TEMP)*ne;
+		// dpH+ / dpH+	
+		dfdy[i+1][2] = -k6(TEMP)*ne - k7(TEMP)*ne - pH_p*k8(TEMP, pH_p)*dne - pH_p*ne*dk8dph_p(TEMP, pH_p) - k8(TEMP, pH_p)*ne + k6(TEMP)*pH*dne - k7(TEMP)*pH_p*dne;
 	}
 }
 
@@ -178,6 +183,15 @@ double k8(double temp, double pH_p) {
 		   psi = (G0*sqrt(temp)) / ne;
 	return STEP_TIME * (1e-14*12.25)/(1 + 8.074e-6*pow(psi, 1.378)*(1 + 5.087e2*pow(temp,1.586e-2)*pow(psi,-0.4723 - 1.102e-5*log(temp))));
 }
+/*
+double dk8dph_p(double t, double pH_p) {
+	double ne = getne(pH_p),
+		   dne = 25/(34*M_h),
+		   sqtt = sqrt(t);
+		   
+	return (4852724953998691.0*((371070228163907166973.0*sqtt*((5087*pow(t,793.0/50000.0))/(10*pow((113*sqtt)/(100*ne),(813132478769117.0*log(t))/73786976294838206464.0 + 4723.0/10000.0)) + 1)*dne*pow((113*sqtt)/(100*ne),189.0/500.0))/(29514790517935282585600000.0*ne*ne) - (2739672352205799359059.0*pow(t,25793.0/50000.0)*dne*((813132478769117.0*log(t))/73786976294838206464.0 + 4723.0/10000.0)*pow((113*sqtt)/(100*ne),689.0/500.0))/(590295810358705651712000.0*ne*ne*pow((113*sqtt)/(100*ne),(813132478769117.0*log(t))/73786976294838206464.0 + 14723.0/10000.0))))/(39614081257132168796771975168.0*pow((4766048372836189.0*((5087.0*pow(t,793.0/50000.0))/(10*pow((113*sqtt)/(100*ne),(813132478769117.0*log(t))/73786976294838206464.0 + 4723.0/10000.0)) + 1)*pow((113*sqtt)/(100*ne),689.0/500.0))/590295810358705651712.0 + 1, 2));
+}
+*/
 double dk8dph_p(double temp, double pH_p) {
 	double c0 = 12.25,
 		   c1 = 8.074e-6,
@@ -192,5 +206,6 @@ double dk8dph_p(double temp, double pH_p) {
 		   ne = getne(pH_p),
 		   psi = (G0*sqrt(temp)) / ne,
 		   psidph_h = -(G0*M_h*1.36*sqrt(temp))/(pH_p*pH_p);
+
 	return -(c0*c1*psidph_h*pow(psi,c2+c5+c6*logt-1)*(c2*c3*tc4+c2*pow(psi,c5+c6*logt)-c3*c5*tc4-c3*c6*tc4*logt))/(1e14*pow(c1+c3+tc4*pow(psi,c2)+c1*pow(psi,c2+c5+c6*logt)+pow(psi,c5+c6*logt),2));
 }

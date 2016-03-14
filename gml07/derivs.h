@@ -6,7 +6,7 @@
 #include "../constants.h"
 // #include <cmath.h>
 
-#define N_TOT 300  // cm^-3
+#define N_TOT 100  // cm^-3
 #define xC 1.4e-4
 #define xO 3.2e-4
 #define xSi 1.5e-5

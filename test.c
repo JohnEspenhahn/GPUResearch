@@ -66,47 +66,48 @@ void plotH2(FILE *fp, int steps) {
 	for (double t = 50; t < 600; t += 5) {
 		for (double gt = 20; gt < 100; gt += 5) {
 			double nH2 = 100;
-			fprintf(fp, "%G,%G,%G,%G\n", nH, t, gt, k1(t, gt)*nH*nH - k2(t,nH)*nH2*nH - k3(t,nH2)*nH2*nH2);
+			fprintf(fp, "%G,%G,%G,%G\n", nH, t, gt, k1(TEMP, GRAIN_TEMP)*pH*nH - k2(TEMP,pH2,pH_p)*pH2*nH - k3(TEMP,pH2,pH_p)*pH2*nH2 + SELF_SHIELDING*pH2);
 		}
 	}
 }
 */
 
-void plotJacobn(FILE *fp, int steps) {
-	double *vec_nHx = vector(1,2);
-	vec_nHx[1] = 1e1;
-	vec_nHx[2] = 1e-3;
+void plotDerivs(FILE *fp) {
+	double *nHx = vector(1,2);
+	double *dnHx = vector(1,2);
 	
-	double *dfdx = vector(1,2);
-	double **dfdy = matrix(1,2,1,2);
-	
-	for (int temp = 1; temp < 700; temp += 20) {
-		for (int grain = 1; grain < 100; grain += 10) {
-			setTemp(temp);
-			setGrainTemp(grain);
-			jacobn(0, vec_nHx, dfdx, dfdy, 2);
+	for (double pH2 = 0; pH2 < 90; pH2 += 2) {
+		for (double pH_p = 0; pH_p < 90; pH_p += 2) {
+			nHx[1] = pH2;
+			nHx[2] = pH_p;
 			
-			fprintf(fp, "%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
+			derivs(0, 2, nHx, dnHx);
+			fprintf(fp, "%G,%G,%G,%G\n", pH2, pH_p, dnHx[1], dnHx[2]);
 		}
 	}
 }
 
-void plotRuns(FILE *fp, int steps) {
-	int init = 75, max = 200;
-	for (int j = init; j < max; j += (max - init) / steps) {
-		setTemp(j);
-		run(fp, 5e14, 0);
+void plotJacobn(FILE *fp) {
+	double *nHx = vector(1,2);	
+	double *dfdx = vector(1,2);
+	double **dfdy = matrix(1,2,1,2);
+	
+	for (double pH2 = 0; pH2 < 90; pH2 += 2) {
+		for (double pH_p = 0; pH_p < 90; pH_p += 2) {
+			nHx[1] = pH2;
+			nHx[2] = pH_p;
+			
+			jacobn(0, nHx, dfdx, dfdy, 2);
+			fprintf(fp, "%G,%G,%G,%G,%G,%G\n", pH2, pH_p, dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
+		}
 	}
 }
 
 void outputRates() {
 	FILE *fp = fopen("out.csv", "w");
-	// fprintf(fp, "temp,grain_temp,k1,k2,k3,k6,k7,k8\n");
 	
 	int steps = 75;
-	plotJacobn(fp, steps);
-	
-	// dk3ndH2(73.3333, 200);
+	plotDerivs(fp);
 	
 	fclose(fp);
 }
