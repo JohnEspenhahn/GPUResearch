@@ -25,12 +25,11 @@ void run(FILE *fp, double x2, bool print) {
 	
 	double pH2 = vec_pHx[1];
 	double pH_p = vec_pHx[2];
-	double pH = getpH(pH2, pH_p);
-	double ne = getne(pH_p);
 	
 	if (print) {
 		printf("s     = %G\n\n", (double) x2);
 		printf("%% pH2 = %G\n", getxH2(pH2) / (double) xH_tot);
+		printf("%% pHp = %G\n", getxH_p(pH_p) / (double) xH_tot);
 		printf("OK calls %d\n", nok);
 		printf("bad calls %d\n\n---------------------\n", nbad);
 	}

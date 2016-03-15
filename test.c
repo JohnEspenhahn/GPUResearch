@@ -76,8 +76,8 @@ void plotDerivs(FILE *fp) {
 	double *nHx = vector(1,2);
 	double *dnHx = vector(1,2);
 	
-	for (double pH2 = 0; pH2 < 90; pH2 += 2) {
-		for (double pH_p = 0; pH_p < 90; pH_p += 2) {
+	for (double pH2 = 2; pH2 < 90; pH2 += 2) {
+		for (double pH_p = 2; pH_p < 90; pH_p += 2) {
 			nHx[1] = pH2;
 			nHx[2] = pH_p;
 			
@@ -92,7 +92,7 @@ void plotJacobn(FILE *fp) {
 	double *dfdx = vector(1,2);
 	double **dfdy = matrix(1,2,1,2);
 	
-	for (double pH2 = 0; pH2 < 90; pH2 += 2) {
+	for (double pH2 = 2; pH2 < 90; pH2 += 2) {
 		for (double pH_p = 0; pH_p < 90; pH_p += 2) {
 			nHx[1] = pH2;
 			nHx[2] = pH_p;

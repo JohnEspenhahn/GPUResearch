@@ -17,7 +17,7 @@ double getnH2(double pH2) { return pH2 / (2 * 1.36 * M_h); }
 double getnH_p(double pH_p) { return pH_p / (1.36 * M_h); }
 
 /** Takes mass density of H2 and converts to abundance */
-double getxH2(double pH2) { return (2*getnH2(pH2)) / N_TOT; }
+double getxH2(double pH2) { return pH2 / (N_TOT * 1.36 * M_h); }
 
 /** Takes mass density of H_p and converts to abundance */
 double getxH_p(double pH_p) { return pH_p / (N_TOT * 1.36 * M_h); }
@@ -46,18 +46,19 @@ double getne(double pH_p) {
 // run a step of the derivatives
 void derivs(double x, int nvar, double vec_pHx[], double vec_dpHxdt[]) {
 	for (int i = 1; i <= nvar; i += 2) {
-		double pH2 = vec_pHx[i];
-		double pH_p = vec_pHx[i+1];
-		double pH = getpH(pH2, pH_p); 
-		double nH = getnH(pH2, pH_p);
-		double nH2 = getnH2(pH2);
-		double ne = getne(pH_p);
+		double pH2 = vec_pHx[i]
+			 , pH_p = vec_pHx[i+1]
+			 , pH = getpH(pH2, pH_p)
+			 , nH = getnH(pH2, pH_p)
+			 , nH2 = getnH2(pH2)
+			 , nH_p = getnH_p(pH_p)
+			 , ne = getne(pH_p);
 		
 		// pH2
-		vec_dpHxdt[i] = k1(TEMP, GRAIN_TEMP)*pH*nH - k2(TEMP,pH2,pH_p)*pH2*nH - k3(TEMP,pH2,pH_p)*pH2*nH2 + SELF_SHIELDING*pH2;
+		vec_dpHxdt[i] = k1(TEMP, GRAIN_TEMP)*pH*nH - k2(TEMP,nH2,nH_p)*pH2*nH - k3(TEMP,nH2,nH_p)*pH2*nH2 - SELF_SHIELDING*pH2;
 		
 		// pH_p
-		vec_dpHxdt[i+1] = k6(TEMP)*pH*ne - k7(TEMP)*pH_p*ne - k8(TEMP,ne)*pH_p*ne + COSMIC_RAY_RATE*pH;
+		vec_dpHxdt[i+1] = k6(TEMP)*pH*ne - k7(TEMP)*pH_p*ne - k8(TEMP,ne)*pH_p*ne - COSMIC_RAY_RATE*pH;
 	}
 }
 
@@ -67,24 +68,25 @@ void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 		dfdx[i] = 0.0;
 		dfdx[i+1] = 0.0;
 		
-		double pH2 = vec_pHx[i];
-		double pH_p = vec_pHx[i+1];
-		double pH = getpH(pH2, pH_p);
-		double nH = getnH(pH2, pH_p);
-		double nH2 = getnH2(pH2);
-		double dnH = -1/(1.36*M_h);
-		double ne = getne(pH_p);
-		double dne = 1/(1.36*M_h);
+		double pH2 = vec_pHx[i]
+			 , pH_p = vec_pHx[i+1]
+			 , pH = getpH(pH2, pH_p)
+			 , nH = getnH(pH2, pH_p)
+			 , nH2 = getnH2(pH2)
+			 , dnH = -1/(1.36*M_h // Partials of nH
+			 , nH_p = getnH_p(pH_p)
+			 , ne = getne(pH_p)
+			 , dne = 1/(1.36*M_h); // Derivative of ne
 		
 		// dpH2 / dpH2
-		dfdy[i][1] = k1(TEMP, GRAIN_TEMP)*dnH*pH - k2(TEMP, pH2, pH_p)*nH - nH2*k3(TEMP, pH2, pH_p) - k1(TEMP, GRAIN_TEMP)*nH - pH2*dk2dh2(TEMP, pH2, pH_p)*nH - pH2*dnH*k2(TEMP, pH2, pH_p) - pH2*nH2*dk3dh2(TEMP, pH2, pH_p) - pH2*k3(TEMP, pH2, pH_p)/(2.72*M_h);
+		dfdy[i][1] = k1(TEMP, GRAIN_TEMP)*dnH*pH - k2(TEMP, pH2, pH_p)*nH - nH2*k3(TEMP, pH2, pH_p) - k1(TEMP, GRAIN_TEMP)*nH - pH2*dk2dh2(TEMP, pH2, pH_p)*nH - pH2*dnH*k2(TEMP, pH2, pH_p) - pH2*nH2*dk3dh2(TEMP, pH2, pH_p) - pH2*k3(TEMP, pH2, pH_p)/(2*1.36*M_h) - SELF_SHIELDING;
 		// dpH2 / dpH+
 		dfdy[i][2] = k1(TEMP, GRAIN_TEMP)*dnH*pH - k1(TEMP, GRAIN_TEMP)*nH - pH2*dk2dh_p(TEMP, pH2, pH_p)*nH - pH2*dnH*k2(TEMP, pH2, pH_p) - pH2*nH2*dk3dh_p(TEMP, pH2, pH_p);
 		
 		// dpH+ / dpH2
-		dfdy[i+1][1] = -k6(TEMP)*ne;
+		dfdy[i+1][1] = -k6(TEMP)*ne + COSMIC_RAY_RATE;
 		// dpH+ / dpH+	
-		dfdy[i+1][2] = -k6(TEMP)*ne - k7(TEMP)*ne - pH_p*k8(TEMP, pH_p)*dne - pH_p*ne*dk8dph_p(TEMP, pH_p) - k8(TEMP, pH_p)*ne + k6(TEMP)*pH*dne - k7(TEMP)*pH_p*dne;
+		dfdy[i+1][2] = -k6(TEMP)*ne - k7(TEMP)*ne - pH_p*k8(TEMP, pH_p)*dne - pH_p*ne*dk8dph_p(TEMP, pH_p) - k8(TEMP, pH_p)*ne + k6(TEMP)*pH*dne - k7(TEMP)*pH_p*dne + COSMIC_RAY_RATE;
 	}
 }
 
@@ -106,7 +108,6 @@ double k2(double temp, double pH2, double pH_p) {
 	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
 	
 	double n = N_TOT * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
-
 	return STEP_TIME * pow(kH, n/(1+n)) * pow(kL, 1/(1+n));
 }
 double dk2dh_x(double n_prime, double temp, double ncr_H, double ncr_H2, double pH2, double pH_p) {
@@ -116,13 +117,13 @@ double dk2dh_x(double n_prime, double temp, double ncr_H, double ncr_H2, double 
 	if (kL == 0) return 0;
 	
 	double n = N_TOT * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));	
-	return (log(kH/kL) * k2(temp, pH2, pH_p) * n_prime) / ((n + 1)*(n + 1));
+	return pow(kH,n/(n+1))*pow(kL,1/(n + 1))*log10(kH)*(n_prime/(n + 1) - (n_prime*n)/((n+1)*(n+1))) - (pow(kH,n/(n + 1))*pow(kL,1/(n+1))*log10(kL)*n_prime)/((n+1)*(n+1));
 }
 double dk2dh2(double temp, double pH2, double pH_p) {
 	double log_temp = log10(temp/1.0e4),
 		   ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10),
 		   ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10),
-		   n_prime = 2/(2.72*M_h*ncr_H2) - 1/(1.36*M_h*ncr_H);
+		   n_prime = -1/(ncr_H*1.36*M_h) + 1/(ncr_H2*1.36*M_h*N_TOT);
 		   
 	return dk2dh_x(n_prime, temp, ncr_H, ncr_H2, pH2, pH_p);
 }
@@ -130,7 +131,7 @@ double dk2dh_p(double temp, double pH2, double pH_p) {
 	double log_temp = log10(temp/1.0e4),
 		   ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10),
 		   ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10),
-		   n_prime = -2 / (2.72*M_h*ncr_H);
+		   n_prime = -1/(ncr_H*1.36*M_h);
 		   
 	return dk2dh_x(n_prime, temp, ncr_H, ncr_H2, pH2, pH_p);
 }
@@ -145,7 +146,6 @@ double k3(double temp, double pH2, double pH_p) {
 	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
 	
 	double n = N_TOT * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
-	
 	return STEP_TIME * pow(kH, n/(1+n)) * pow(kL, 1/(1+n));
 }
 double dk3dh_x(double n_prime, double temp, double ncr_H, double ncr_H2, double pH2, double pH_p) {
@@ -155,20 +155,22 @@ double dk3dh_x(double n_prime, double temp, double ncr_H, double ncr_H2, double 
 	if (kL == 0) return 0;
 	
 	double n = N_TOT * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));	
-	return (log(kH/kL) * k3(temp, pH2, pH_p) * n_prime) / ((n + 1)*(n + 1));
+	return pow(kH,n/(n+1))*pow(kL,1/(n + 1))*log10(kH)*(n_prime/(n + 1) - (n_prime*n)/((n+1)*(n+1))) - (pow(kH,n/(n + 1))*pow(kL,1/(n+1))*log10(kL)*n_prime)/((n+1)*(n+1));
 }
 double dk3dh2(double temp, double pH2, double pH_p) { 
 	double log_temp = log10(temp/1.0e4);
 	double ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10);
 	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
-	double n_prime = 2/(2.72*M_h*ncr_H2) - 1/(1.36*M_h*ncr_H);
+	double n_prime = -1/(ncr_H*1.36*M_h) + 1/(ncr_H2*1.36*M_h*N_TOT);
+	
 	return dk3dh_x(n_prime, temp, ncr_H, ncr_H2, pH2, pH_p);
 }
 double dk3dh_p(double temp, double pH2, double pH_p) { 
 	double log_temp = log10(temp/1.0e4);
 	double ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10);
 	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
-	double n_prime = -2/(2.72*M_h*ncr_H);
+	double n_prime = -1/(ncr_H*1.36*M_h);
+	
 	return dk3dh_x(n_prime, temp, ncr_H, ncr_H2, pH2, pH_p);
 }
 double k6(double temp) {
