@@ -7,6 +7,7 @@
 
 #if defined(__STDC__) || defined(ANSI) || defined(NRANSI) /* ANSI */
 
+#include <string.h>
 #include <stdio.h>
 /* #include <stddef.h> */
 #include <stdlib.h>
@@ -30,6 +31,13 @@ double *vector(long nl, long nh)
 	v=(double *)malloc((size_t) ((nh-nl+1+NR_END)*sizeof(double)));
 	if (!v) nrerror("allocation failure in vector()");
 	return v-nl+NR_END;
+}
+
+void copy_vector(double *src, double *dest, long nl, long nh) 
+/* copy a double vector with subscript range v[nl..nh] */
+{
+	memcpy((void*) dest, (const void*) src, (size_t) ((nh-nl+1+NR_END)*sizeof(double)));
+	// for (; nl <= nh; nl++) dest[nl] = src[nl];
 }
 
 int *ivector(long nl, long nh)

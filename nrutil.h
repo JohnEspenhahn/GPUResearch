@@ -8,6 +8,8 @@
 #ifndef _NR_UTILS_H_
 #define _NR_UTILS_H_
 
+#include <string.h>
+
 #define ARRSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 #define IS_ODD(x) ((x&1) == 1)
@@ -54,6 +56,7 @@ static int iminarg1,iminarg2;
 
 void nrerror(char error_text[]);
 double *vector(long nl, long nh);
+void copy_vector(double *src, double *dest, long nl, long nh);
 int *ivector(long nl, long nh);
 unsigned char *cvector(long nl, long nh);
 unsigned long *lvector(long nl, long nh);

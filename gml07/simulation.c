@@ -13,12 +13,12 @@ void run(FILE *fp, double x2, bool print) {
 	yp = matrix(1, NVAR, 1, KMAX);
 	
 	double *vec_pHx = vector(1, NVAR);
-	vec_pHx[1] = 5;
-	vec_pHx[2] = 5;
+	vec_pHx[1] = 0;
+	vec_pHx[2] = 1e-5;
 	// for (int i = 1; i <= NVAR; i++) { vec_pHx[i] = 0; }
 	
-	double eps = 1e-5;
-	double h1  = 1e-6;
+	double eps = 1e-8;
+	double h1  = 1e-8;
 	
 	int nok = 0, nbad = 0;
 	odeint(vec_pHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
@@ -42,4 +42,8 @@ void run(FILE *fp, double x2, bool print) {
 		double perc_hp = getxH_p(yp[2][i]) / (double) xH_tot;
 		fprintf(fp, "%G,%G,%G,%G,%G\n", myr, perc_h2, getTemp(), getGrainTemp(), perc_hp);
 	}
+	
+	free_vector(vec_pHx, 1, NVAR);
+	free_matrix(yp, 1, NVAR, 1, KMAX);
+	free_vector(xp, 1, KMAX);
 }
