@@ -88,7 +88,7 @@ public class Equation {
 		return (p == null ? 0 : p.getNetProduction());
 	}
 	
-	public String asODEEntry() {
+	public String asODEEntry(String derv) {
 		String str = "k" + id + "(t)";
 		for (Entry<String, EquationProduct> e: net_products.entrySet()) {
 			EquationProduct amnt = e.getValue();
@@ -97,7 +97,9 @@ public class Equation {
 				if (amnt.getDistruction() > 1) {
 					str += amnt.getDistruction() + "*";
 				}
-				str += "p" + e.getKey();
+				
+				if (e.getKey().equals(derv)) str += "p" + e.getKey();
+				else str += "n" + e.getKey();
 			}
 		}
 		

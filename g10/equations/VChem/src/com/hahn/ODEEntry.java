@@ -4,33 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ODEEntry {
-	private List<Equation> c, d;
+	private List<Equation> creation, distruction;
+	private String derv;
 	
-	public ODEEntry() { 
-		c = new ArrayList<Equation>();
-		d = new ArrayList<Equation>();
+	public ODEEntry(String derv) {
+		this.derv = derv;
+		this.creation = new ArrayList<Equation>();
+		this.distruction = new ArrayList<Equation>();
 	}
 	
 	public void addCreationEq(Equation c) {
-		this.c.add(c);
+		this.creation.add(c);
 	}
 	
 	public void addDistructionEq(Equation d) {
-		this.d.add(d);
+		this.distruction.add(d);
 	}
 	
 	@Override
 	public String toString() {
 		String str = "";
 		boolean first = true;
-		for (Equation e: c) {
+		for (Equation e: creation) {
 			if (first) first = false;
 			else str += " + ";
-			str += e.asODEEntry();
+			str += e.asODEEntry(derv.replace("_p", ""));
 		}
 		
-		for (Equation e: d) {
-			str += " - " + e.asODEEntry();
+		for (Equation e: distruction) {
+			str += " - " + e.asODEEntry(derv);
 		}
 		
 		return str;
