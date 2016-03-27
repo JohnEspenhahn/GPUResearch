@@ -7,8 +7,8 @@
 #include "jacobian.h"
 
 double temp = 50, grain_temp = 40;
-double end_pH2 = 2;
-double end_pH_p = 0.5;
+double end_pH2 = 1.5e-22;
+double end_pH_p = 1e-22;
 
 void plotK1(FILE *fp, int steps) {
 	fprintf(fp, "k1,%G,%G,,%G\n", temp, grain_temp, k1(temp,grain_temp));
@@ -88,6 +88,9 @@ void compareJacobn(FILE *fp, int steps) {
 		for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p/steps) {
 			nHx[1] = pH2;
 			nHx[2] = pH_p;
+			
+			fprintf(fp, "nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
+			fprintf(fp, "pH2, pH_p, pH = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
 			
 			jacobn(0, nHx, dfdx, dfdy, 2);
 			fprintf(fp, "%G,%G,%G,%G,%G,%G\n", pH2, pH_p, dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);

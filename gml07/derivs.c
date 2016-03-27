@@ -8,6 +8,10 @@ void setTemp(int t) { if (t > 0) TEMP = t; }
 double getGrainTemp() { return GRAIN_TEMP; }
 void setGrainTemp(int t) { if (t > 0) GRAIN_TEMP = t; }
 
+/** Gets the total adundance of hydrogen nuclei */
+double getxH_tot() { return xH_tot; }
+
+/** Takes mass densities and converts to number density */
 double getnH(double pH2, double pH_p) { return xH_tot*N_TOT - (pH_p+pH2)/(1.36*M_h); }
 
 /** Takes mass density of H2 and converts to number density */
@@ -22,16 +26,13 @@ double getxH2(double pH2) { return pH2 / (N_TOT * 1.36 * M_h); }
 /** Takes mass density of H_p and converts to abundance */
 double getxH_p(double pH_p) { return pH_p / (N_TOT * 1.36 * M_h); }
 
-/** Gets the total adundance of hydrogen nuclei */
-double getxH_tot() { return xH_tot; }
-
 /** Derives the abundance of atomic hydrogen based on mass densities of H2 and H+ */
 double getxH(double pH2, double pH_p) { 
 	return xH_tot - getxH2(pH2) - getxH_p(pH_p); 
 }
 
 /** Derives the mass density of atomic hydrogen based on mass densities of H2 and H+ */
-double getpH(double pH2, double pH_p) { return getxH(pH2, pH_p) * N_TOT * 1.36 * M_h; };
+double getpH(double pH2, double pH_p) { return xH_tot*N_TOT*1.36*M_h - pH2 - pH_p; };
 
 /** Derives the abundance of e- based on the mass densities of H2 and H+ */
 double getxe(double pH_p) { 

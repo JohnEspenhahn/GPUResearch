@@ -28,6 +28,9 @@ void run(FILE *fp, double x2, bool print) {
 	
 	if (print) {
 		printf("s     = %G\n\n", (double) x2);
+		printf("nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
+		printf("pH2, pH_p, pH  = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
+			
 		printf("%% pH2 = %G\n", getxH2(pH2) / (double) xH_tot);
 		printf("%% pHp = %G\n", getxH_p(pH_p) / (double) xH_tot);
 		printf("OK calls %d\n", nok);
