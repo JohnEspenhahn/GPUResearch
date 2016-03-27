@@ -8,10 +8,13 @@
 
 #define N_TOT 300.0  // cm^-3
 #define xC 1.4e-4
+#define nC (N_TOT*xC)
 #define xO 3.2e-4
 #define xSi 1.5e-5
+#define nSi (N_TOT*xSi)
 #define xHe 0.1
 #define xH_tot (1.0 - xC - xO - xSi - xHe)
+#define N_H_tot (N_TOT*xH_tot)
 
 #define TEMP_INIT 50 // K
 #define GRAIN_TEMP_INIT 50 // K
@@ -26,8 +29,6 @@ double dpH_p(double vec_pHx[]);
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
-
-double getnH_tot();
 
 double getTemp();
 void setTemp(int t);

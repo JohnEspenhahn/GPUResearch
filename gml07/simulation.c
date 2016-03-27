@@ -14,7 +14,7 @@ void run(FILE *fp, double x2, bool print) {
 	
 	double *vec_pHx = vector(1, NVAR);
 	vec_pHx[1] = 0;
-	vec_pHx[2] = 1e-5;
+	vec_pHx[2] = 0;
 	// for (int i = 1; i <= NVAR; i++) { vec_pHx[i] = 0; }
 	
 	double eps = 1e-8;
@@ -31,8 +31,8 @@ void run(FILE *fp, double x2, bool print) {
 		printf("nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
 		printf("pH2, pH_p, pH  = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
 			
-		printf("%% pH2 = %G\n", getxH2(pH2) / (double) xH_tot);
-		printf("%% pHp = %G\n", getxH_p(pH_p) / (double) xH_tot);
+		printf("%% pH2 = %G\n", getxH2(pH2));
+		printf("%% pHp = %G\n", getxH_p(pH_p));
 		printf("OK calls %d\n", nok);
 		printf("bad calls %d\n\n---------------------\n", nbad);
 	}
@@ -41,8 +41,8 @@ void run(FILE *fp, double x2, bool print) {
 	for (int i = 1; i < KMAX; i++) {
 		// int i = KMAX - 1;
 		double myr = xp[i]/(60*60*24*365*1e6);
-		double perc_h2 = getxH2(yp[1][i]) / (double) xH_tot;
-		double perc_hp = getxH_p(yp[2][i]) / (double) xH_tot;
+		double perc_h2 = getxH2(yp[1][i]);
+		double perc_hp = getxH_p(yp[2][i]);
 		fprintf(fp, "%G,%G,%G,%G,%G\n", myr, perc_h2, getTemp(), getGrainTemp(), perc_hp);
 	}
 	

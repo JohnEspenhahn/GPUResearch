@@ -6,10 +6,11 @@
 #include "simulation.h"
 #include "jacobian.h"
 
-double temp = 50, grain_temp = 40;
-double end_pH2 = 1.5e-22;
-double end_pH_p = 1e-22;
+double end_pH2 = 1e-22;
+double end_pH_p = 1e-25;
 
+/*
+double temp = 4000, grain_temp = 4000;
 void plotK1(FILE *fp, int steps) {
 	fprintf(fp, "k1,%G,%G,,%G\n", temp, grain_temp, k1(temp,grain_temp));
 }
@@ -77,6 +78,7 @@ void plotDerivs(FILE *fp) {
 		}
 	}
 }
+*/
 
 void compareJacobn(FILE *fp, int steps) {
 	double *nHx = vector(1,2);	
@@ -89,36 +91,22 @@ void compareJacobn(FILE *fp, int steps) {
 			nHx[1] = pH2;
 			nHx[2] = pH_p;
 			
-			fprintf(fp, "nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
-			fprintf(fp, "pH2, pH_p, pH = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
+			// fprintf(fp, "nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
+			printf("pH2, pH_p, pH = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
 			
 			jacobn(0, nHx, dfdx, dfdy, 2);
-			fprintf(fp, "%G,%G,%G,%G,%G,%G\n", pH2, pH_p, dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
+			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
 			
-			jacobian(derivs, 2, nHx, 1e-6, dfdy, 2);
-			fprintf(fp, "%G,%G,%G,%G,%G,%G\n", pH2, pH_p, dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
+			jacobian(derivs, 2, nHx, 1e-30, dfdy, 2);
+			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
 		}
 	}
 }
 
-//=IF(A5=A4,IF(B5=B4,F4-F5,),)
-
 void outputRates() {
 	FILE *fp = fopen("out.csv", "w");
 	
-	int steps = 10;
-	/*
-	plotK1(fp,steps);
-	plotK2(fp,steps);
-	plotK3(fp,steps);
-	plotH2(fp,steps);
-	
-	plotK6(fp,steps);
-	plotK7(fp,steps);
-	plotK8(fp,steps);
-	plotH_p(fp,steps);
-	*/
-	
+	int steps = 5;	
 	compareJacobn(fp, steps);
 	
 	fclose(fp);
