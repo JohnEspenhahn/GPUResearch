@@ -2,19 +2,68 @@
 
 int T = TEMP_INIT, GRAIN_TEMP = GRAIN_TEMP_INIT;
 
+// mu for CH2 is about 14*mu_h (C = 12, h2 = 2)
+double getpH(double pH_p, double pH2, double pOH, double pH2O, double pHCO_p, double pCH, double pCH2, double pCH3_p) {
+	return N_H_tot*mu_h*M_h - mu_h*(pH_p/mu_h + 2*pH2/mu_h2 + pOH/mu_oh + 2*pH2O/mu_h2o + pHCO_p/mu_hco + pCH/mu_ch + 2*pCH2/mu_ch2 + 3*pCH3_p/mu_ch3);
+}
+
+double getnH_p(double pH_p) { return pH_p / (mu_h * M_h); }
+
+double getnH2(double pH2) { return pH2 / (mu_h2 * M_h); }
+
+double getnHe_p(double pHe_p) { return pHe_p / (mu_he * M_h); }
+
+double getnC_p(double pC_p) { return pC_p / (mu_c * M_h); }
+
+double getnO_p(double pO_p) { return pO_p / (mu_o * M_h); }
+
+double getnOH(double pOH) { return pOH / (mu_oh * M_h); }
+
+double getnH2O(double pH2O) { return pH2O / (mu_h2o * M_h); }
+
+double getnCO(double pCO) { return pCO / (mu_co * M_h); }
+
+double getnC2(double pC2) { return pC2 / (mu_c2 * M_h); }
+
+double getnO2(double pO2) { return pO2 / (mu_o2 * M_h); }
+
+double getnHCO_p(double pHCO_p) { return pHCO_p / (mu_hco * M_h); }
+
+double getnCH(double pCH) { return pCH / (mu_ch * M_h); }
+
+double getnCH2(double pCH2) { return pCH2 / (mu_ch2 * M_h); }
+
+double getnCH3_p(double pCH3_p) { return pCH3_p / (mu_ch3 * M_h); }
+
+double getxe(double pH_p, double pHe_p, double pC_p, double pO_p, double pHCO_p, double pCH3_p) {
+	return -xH_m + xH2_p + xH3_p + /* ... */
+			(getnH_p(pH_p)+getnHe_p(pHe_p)+getnC_p(pC_p)+getnO_p(pO_p)+getnHCO_p(pHCO_p)+getnCH3_p(pCH3_p)) / N_TOT;
+}
+
+double pH_p(double vec_pHx[]) {
+	
+}
+
 // run a step of the derivatives
-void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
+void derivs(double t, int nvar, double vec_pHx[], double vec_dnHxdt[]) {
 	for (int i = 1; i <= nvar; i += 2) {
-		double nH2 = vec_nHx[i];
-		double nH_p = vec_nHx[i+1];
-		double nH = getnH(nH2, nH_p); 
-		double ne = getne(nH2, nH_p);
+		double pH_p = vec_pHx[i]  , pH2  = vec_pHx[i+1], pHe_p = vec_pHx[i+2]
+			 , pC_p = vec_pHx[i+3], pO_p = vec_pHx[i+4], pOH = vec_pHx[i+5]
+			 , pH2O = vec_pHx[i+6], pCO  = vec_pHx[i+7], pC2 = vec_pHx[i+8]
+			 , pO2  = vec_pHx[i+9], pHCO_p = vec_pHx[i+10], pCH = vec_pHx[i+11]
+			 , pCH2 = vec_pHx[i+12], pCH3_p = vec_pHx[i+13]
+			 , nH_p = getnH_p(pH_p), nH2 = getnH2(pH2), pHe_p = getnHe_p(pHe_p)
+			 , nC_p = getnC_p(pC_p), nO_p = getnO_p(pO_p), nOH = getnOH(pOH)
+			 , nH2O = getnH2O(pH2O), nCO = getnCO(pCO), nC2 = getnC2(pC2)
+			 , nO2 = getnO2(pO2), nHCO_p = getnHCO_p(pHCO_p), nCH = getnCH(pCH)
+			 , nCH2 = getnCH2(pCH2), nCH3_p = getnCH3_p(pCH3_p)
+			 , pH = getpH(pH_p, pH2, pOH, pH2O, pHCO_p, pCH, pCH2, pCH3_p);
 		
 		// pH_p
 		vec_dnHxdt[i] = k4(t)*pH*nH2_p + k11(t)*ne*pH + k18(t)*pH*nHe_p + k24(t)*nO_p*pH + k28(t)*nC_p*pH + k89(t)*pH2*nHe_p + k97(t)*pH2O*nHe_p + k106(t)*nCO_p*pH - k3(t)*nH*pH_p - k5(t)*nH_m*pH_p - k7(t)*pH_p*nH2 - k12(t)*ne*pH_p - k15(t)*nH_m*pH_p - k19(t)*pH_p*nHe - k25(t)*pH_p*nO - k27(t)*nC*pH_p - k62(t)*pH_p*nCH2 - k90(t)*nCH*pH_p - k91(t)*pH_p*nCH2 - k94(t)*pH_p*nOH - k96(t)*nH2O*pH_p - k100(t)*nO2*pH_p - k107(t)*nC_m*pH_p - k108(t)*pH_p*nO_m - k141(t)*pH_p*nH2;
 		
 		// pH2
-		vec_dnHxdt[i+1] = k2(t)*nH_m*pH + k4(t)*nH*pH2_p + k35(t)*nCH*pH + k39(t)*pH*nCH2 + k41(t)*pCH2*nO + k44(t)*pH*nOH + k49(t)*nH2O*pH + k55(t)*pH*nH3_p + k57(t)*nC*pH3_p + k59(t)*pH*nCH_p + k62(t)*pH_p*nCH2 + k63(t)*pH*nCH2_p + k66(t)*pH*nCH3_p + k67(t)*pCH3_p*nO + k71(t)*pH3_p*nO + k72(t)*nOH*pH3_p + k76(t)*nH2O*pH3_p + k79(t)*nC*pH3O_p + k84(t)*nCO*pH3_p + k85(t)*nCO*pH3_p + k92(t)*pCH2*nHe_p + k110(t)*ne*pH3_p + k115(t)*ne*pCH2_p + k117(t)*ne*pCH3_p + k121(t)*ne*pH2O_p + k124(t)*ne*pH3O_p + k126(t)*ne*pH3O_p + k154(t)*pH*nH*nH + k155(t)*pH*nH*nH2 + k156(t)*pH*nH*nHe + k165(t)*pH*nH - k7(t)*nH_p*pH2 - k8(t)*ne*pH2 - k9(t)*nH*pH2 - k10(t)*nH2*pH2 - k30(t)*pH2*nHe - k34(t)*nC*pH2 - k36(t)*nCH*pH2 - k43(t)*pH2*nO - k45(t)*nOH*pH2 - k51(t)*nO2*pH2 - k54(t)*nH2_p*pH2 - k58(t)*nC_p*pH2 - k60(t)*nCH_p*pH2 - k64(t)*pH2*nCH2_p - k69(t)*nO_p*pH2 - k74(t)*pH2*nOH_p - k75(t)*nH2O_p*pH2 - k88(t)*pH2*nHe_p - k89(t)*pH2*nHe_p - k136(t)*nC_m*pH2 - k139(t)*pH2*nO_m - k141(t)*nH_p*pH2 - k144(t)*nC*pH2 - k148(t)*nC_p*pH2;
+		vec_dnHxdt[i+1] = k2(t)*nH_m*pH + k4(t)*nH*pH2_p + k35(t)*nCH*pH + k39(t)*pH*nCH2 + k41(t)*pCH2*nO + k44(t)*pH*nOH + k49(t)*nH2O*pH + k55(t)*pH*nH3_p + k57(t)*nC*pH3_p + k59(t)*pH*nCH_p + k62(t)*pH_p*nCH2 + k63(t)*pH*nCH2_p + k66(t)*pH*nCH3_p + k67(t)*pCH3_p*nO + k71(t)*pH3_p*nO + k72(t)*nOH*pH3_p + k76(t)*nH2O*pH3_p + k79(t)*nC*pH3O_p + k84(t)*nCO*pH3_p + k85(t)*nCO*pH3_p + k92(t)*pCH2*nHe_p + k110(t)*ne*pH3_p + k115(t)*ne*pCH2_p + k117(t)*ne*pCH3_p + k121(t)*ne*pH2O_p + k124(t)*ne*pH3O_p + k126(t)*ne*pH3O_p + k154(t)*pH*nH*nH + k155(t)*pH*nH*nH2 + k156(t)*pH*nH*nHe + k165(t,grain_temp)*pH*nH - k7(t)*nH_p*pH2 - k8(t)*ne*pH2 - k9(t,nH)*nH*pH2 - k10(t,nH2)*nH2*pH2 - k30(t,nH2)*pH2*nHe - k34(t)*nC*pH2 - k36(t)*nCH*pH2 - k43(t)*pH2*nO - k45(t)*nOH*pH2 - k51(t)*nO2*pH2 - k54(t)*nH2_p*pH2 - k58(t)*nC_p*pH2 - k60(t)*nCH_p*pH2 - k64(t)*pH2*nCH2_p - k69(t)*nO_p*pH2 - k74(t)*pH2*nOH_p - k75(t)*nH2O_p*pH2 - k88(t)*pH2*nHe_p - k89(t)*pH2*nHe_p - k136(t)*nC_m*pH2 - k139(t)*pH2*nO_m - k141(t)*nH_p*pH2 - k144(t)*nC*pH2 - k148(t)*nC_p*pH2;
 		
 		// pHe_p
 		vec_dnHxdt[i+2] = k16(t)*ne*pHe + k19(t)*nH_p*pHe - k17(t)*ne*pHe_p - k18(t)*nH*pHe_p - k26(t)*pHe_p*nO - k29(t)*nC*pHe_p - k88(t)*nH2*pHe_p - k89(t)*nH2*pHe_p - k92(t)*nCH2*pHe_p - k93(t)*pHe_p*nC2 - k95(t)*nOH*pHe_p - k97(t)*nH2O*pHe_p - k98(t)*nH2O*pHe_p - k99(t)*nH2O*pHe_p - k101(t)*nO2*pHe_p - k102(t)*nO2*pHe_p - k104(t)*nCO*pHe_p - k105(t)*nCO*pHe_p - k109(t)*nH_m*pHe_p;
@@ -31,7 +80,7 @@ void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 		// pH2O
 		vec_dnHxdt[i+6] = k45(t)*pOH*nH2 + k48(t)*pOH*nOH + k123(t)*ne*pH3O_p + k134(t)*nH_m*pOH + k139(t)*pH2*nO_m + k153(t)*nH*pOH + k162(t)*nH*pOH*nM - k49(t)*pH2O*nH - k76(t)*pH2O*nH3_p - k77(t)*pH2O*nC_p - k78(t)*pH2O*nC_p - k87(t)*nHCO_p*pH2O - k96(t)*pH2O*nH_p - k97(t)*pH2O*nHe_p - k98(t)*pH2O*nHe_p - k99(t)*pH2O*nHe_p;
 		
-		//pCO
+		// pCO
 		vec_dnHxdt[i+7] = k38(t)*pCH*nO + k40(t)*pCH2*nO + k41(t)*pCH2*nO + k42(t)*pC2*nO + k46(t)*pC*nOH + k52(t)*nO2*pC + k81(t)*nO2*pC_p + k86(t)*pHCO_p*nC + k87(t)*pHCO_p*nH2O + k106(t)*pCO_p*nH + k129(t)*pHCO_p*ne + k131(t)*ne*pHCO_p + k137(t)*pC_m*nO + k140(t)*pC*nO_m + k146(t)*pC*nO + k158(t)*pC*nM*nO - k53(t)*nH*pCO - k84(t)*pCO*nH3_p - k85(t)*pCO*nH3_p - k104(t)*pCO*nHe_p - k105(t)*pCO*nHe_p;
 		
 		// pC2
@@ -54,10 +103,17 @@ void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 	}
 }
 
+double (*derivs[])(double, double[]) = { 
+	
+};
+double y_temp[] = vector(1,14);
+
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 {
-	for (int i = 1; i <= nvar; i += 2) {
+	for (int i = 1; i <= nvar; i += 14) {
+		copy_vector(vec_nHx + (i-1), y_temp, 1, nvar);
 		
+		jacobian(derivs, 165, y_temp, 1e-30, dfdy, nvar);
 	}
 }
 
@@ -134,7 +190,7 @@ double k16(double t) {
 	return exp(-4.409864886e1 + 2.391596563e1*lt - 1.07532302e1*lt*lt + 3.05803875e0*lt*lt*lt - 5.6851189e−1*lt*lt*lt*lt + 6.79539123e−2*lt*lt*lt*lt*lt - 5.0090561e−3*lt*lt*lt*lt*lt*lt + 2.06723616e−4*lt*lt*lt*lt*lt*lt*lt - 3.64916141e−6*lt*lt*lt*lt*lt*lt*lt*lt);
 }
 double k17(double t) {
-	return 
+	return 0; // TODO
 }
 double k18(double t) {
 	return 1.25e-15*pow(t/300,0.25);
@@ -583,10 +639,10 @@ double k158(double t) {
 	else return 2.14e-29*pow(t/300,-3.08)*exp(2114/t);
 }
 double k159(double t) {
-	return 
+	return 0; // TODO
 }
 double k160(double t) {
-	return 
+	return 0; // TODO
 }
 double k161(double t) {
 	return 4.33e-32*pow(t/300,-1.0);
