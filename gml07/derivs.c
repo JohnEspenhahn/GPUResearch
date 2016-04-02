@@ -9,7 +9,7 @@ double getGrainTemp() { return GRAIN_TEMP; }
 void setGrainTemp(int t) { if (t > 0) GRAIN_TEMP = t; }
 
 /** Takes mass densities and converts to number density */
-double getnH(double pH2, double pH_p) { return N_H_tot - pH2/(mu_h2*M_h) - pH_p/(mu_h*M_h); }
+double getnH(double pH2, double pH_p) { return N_H_tot - getnH2(pH2) - getnH_p(pH_p); }
 
 /** Takes mass density of H2 and converts to number density */
 double getnH2(double pH2) { return pH2 / (mu_h2*M_h); }
@@ -18,10 +18,10 @@ double getnH2(double pH2) { return pH2 / (mu_h2*M_h); }
 double getnH_p(double pH_p) { return pH_p / (mu_h*M_h); }
 
 /** Takes mass density of H2 and converts to abundance */
-double getxH2(double pH2) { return pH2 / (N_H_tot*mu_h*M_h); }
+double getxH2(double pH2) { return (2*getnH2(pH2)) / N_tot; }
 
 /** Takes mass density of H_p and converts to abundance */
-double getxH_p(double pH_p) { return pH_p / (N_H_tot*mu_h*M_h); }
+double getxH_p(double pH_p) { return getnH_p(pH_p) / N_tot; }
 
 /** Derives the abundance of atomic hydrogen based on mass densities of H2 and H+ */
 double getxH(double pH2, double pH_p) { 
@@ -29,7 +29,7 @@ double getxH(double pH2, double pH_p) {
 }
 
 /** Derives the mass density of atomic hydrogen based on mass densities of H2 and H+ */
-double getpH(double pH2, double pH_p) { return N_H_tot*mu_h*M_h - pH2 - pH_p; };
+double getpH(double pH2, double pH_p) { return N_H_tot*(mu_h*M_h) - pH2 - pH_p; };
 
 /** Derives the abundance of e- based on the mass densities of H2 and H+ */
 double getxe(double pH_p) { 
@@ -38,7 +38,7 @@ double getxe(double pH_p) {
 
 /** Derives the number density of e- based on the mass density of H+ */
 double getne(double pH_p) {
-	return getxe(pH_p) * N_H_tot;
+	return getxe(pH_p) * N_tot;
 }
 
 double dpH2(double vec_pHx[]) {
@@ -73,6 +73,8 @@ void derivs(double x, int nvar, double vec_pHx[], double vec_dpHxdt[]) {
 	}
 }
 
+double (*derivs_arr[])(double[]) = { &dpH2, &dpH_p };
+
 void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 {
 	for (int i = 1; i <= nvar; i += 2) {
@@ -83,6 +85,8 @@ void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 			 , pH_p = vec_pHx[i+1]
 			 , pH = getpH(pH2, pH_p)
 			 , nH = getnH(pH2, pH_p);
+		
+		// jacobian(derivs_arr, 2, vec_pHx, 1e-30, dfdy, nvar);
 		
 		// dpH2 / dpH2
 		dfdy[i][1] = k1(TEMP, GRAIN_TEMP)*pH*(-1/(mu_h*M_h)) 
@@ -120,10 +124,10 @@ double k2(double temp, double pH2, double pH_p) {
 	if (kL < 1e-16) return 0;
 	
 	double log_temp = log10(temp/1.0e4);
-	double ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10);
-	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
+	double ncr_H = pow(10, 3.0 - 0.416*log_temp - 0.327*log_temp*log_temp);
+	double ncr_H2 = pow(10, 4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
 	
-	double n = N_H_tot * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
+	double n = N_tot * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
 	return STEP_TIME * pow(kH, n/(1+n)) * pow(kL, 1/(1+n));
 }
 double k3(double temp, double pH2, double pH_p) { 
@@ -133,10 +137,10 @@ double k3(double temp, double pH2, double pH_p) {
 	if (kL == 0) return 0;
 	
 	double log_temp = log10(temp/1.0e4);
-	double ncr_H = pow(3.0 - 0.416*log_temp - 0.327*log_temp*log_temp, 10);
-	double ncr_H2 = pow(4.845 - 1.3*log_temp + 1.62*log_temp*log_temp, 10);
+	double ncr_H = pow(10, 3.0 - 0.416*log_temp - 0.327*log_temp*log_temp);
+	double ncr_H2 = pow(10, 4.845 - 1.3*log_temp + 1.62*log_temp*log_temp);
 	
-	double n = N_H_tot * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
+	double n = N_tot * ((getxH(pH2,pH_p)/ncr_H) + (getxH2(pH2)/ncr_H2));
 	return STEP_TIME * pow(kH, n/(1+n)) * pow(kL, 1/(1+n));
 }
 double k6(double temp) {
@@ -151,21 +155,4 @@ double k8(double temp, double pH_p) {
 		   ne = getne(pH_p),
 		   psi = (G0*sqrt(temp)) / ne;
 	return STEP_TIME * (1e-14*12.25)/(1 + 8.074e-6*pow(psi, 1.378)*(1 + 5.087e2*pow(temp,1.586e-2)*pow(psi,-0.4723 - 1.102e-5*log(temp))));
-}
-double dk8dph_p(double temp, double pH_p) {
-	double c0 = 12.25,
-		   c1 = 8.074e-6,
-		   c2 = 1.378,
-		   c3 = 5.087e2,
-		   c4 = 1.586e-2,
-		   c5 = 0.4723,
-		   c6 = 1.102e-5,
-		   tc4 = pow(temp,c4),
-		   logt = log(temp),
-		   G0 = 1.13,
-		   ne = getne(pH_p),
-		   psi = (G0*sqrt(temp)) / ne,
-		   psidph_h = -(G0*M_h*mu_h*sqrt(temp))/(pH_p*pH_p);
-
-	return -(c0*c1*psidph_h*pow(psi,c2+c5+c6*logt-1)*(c2*c3*tc4+c2*pow(psi,c5+c6*logt)-c3*c5*tc4-c3*c6*tc4*logt))/(1e14*pow(c1+c3+tc4*pow(psi,c2)+c1*pow(psi,c2+c5+c6*logt)+pow(psi,c5+c6*logt),2));
 }

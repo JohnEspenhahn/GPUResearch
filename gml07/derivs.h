@@ -5,21 +5,24 @@
 #include <float.h>
 #include "../constants.h"
 // #include <cmath.h>
+#include "../jacobian.h"
 
-#define N_TOT 300.0  // cm^-3
+#define N_tot 300.0  // cm^-3
 #define xC 1.4e-4
-#define nC (N_TOT*xC)
+#define nC (N_tot*xC)
 #define xO 3.2e-4
 #define xSi 1.5e-5
-#define nSi (N_TOT*xSi)
+#define nSi (N_tot*xSi)
 #define xHe 0.1
 #define xH_tot (1.0 - xC - xO - xSi - xHe)
-#define N_H_tot (N_TOT*xH_tot)
+#define N_H_tot (N_tot*xH_tot)
 
-#define TEMP_INIT 50 // K
-#define GRAIN_TEMP_INIT 50 // K
+#define TEMP_INIT 50.0 // K
+#define GRAIN_TEMP_INIT 50.0 // K
 
-#define SELF_SHIELDING 1e-17*STEP_TIME // s^-1
+#define CDENSITY_H_tot 8e21 // cm^-2
+#define SELF_SHIELDING (exp(-2e-21 * CDENSITY_H_tot) * 3.3e-11*1.7) // s^-1
+
 #define COSMIC_RAY_RATE 1e-17*STEP_TIME // s^-1 try  try 1.8e-17
 
 #define STEP_TIME 1 // s
