@@ -27,8 +27,8 @@
 
 #define STEP_TIME 1 // s
 
-double dpH2(double vec_pHx[]);
-double dpH_p(double vec_pHx[]);
+double dnH2(double vec_pHx[]);
+double dnH_p(double vec_pHx[]);
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
@@ -40,14 +40,14 @@ double getGrainTemp();
 void setGrainTemp(int t);
 
 double getnH(double pH2, double pH_p);
-double getnH2(double pH2);
-double getnH_p(double pH_p);
 
 double getxH2(double pH2);
 double getxH_p(double pH_p);
 double getxH(double pH2, double pH_p);
 
 double getpH(double pH2, double pH_p);
+double getpH2(double pH2);
+double getpH_p(double pH_p);
 
 double getne(double pH_p);
 
