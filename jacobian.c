@@ -13,21 +13,21 @@ void jacobian(double (*derivs_arr[])(double[]), int nderv, double y[], double h,
 	// copy_vector(y, yh, 1, nvar);
 	
 	// Which derivative
+	double h2 = h*2;
 	for (int i = 1; i <= nderv; i++) {
 		double (*deriv)(double[]) = derivs_arr[i-1];
-		double x0 = deriv(y);
 		
 		// Apply finite step for each variable
 		for (int j = 1; j <= nvar; j++) {
-			y[j] += h;
-			dfdy[i][j] = (deriv(y) - x0) / h;
-			y[j] -= h;
+			double original = y[j];
 			
-			/*
-			yh[j] += h;
-			dfdy[i][j] = (deriv(yh) - x0) / h;
-			yh[j] -= h;
-			*/
+			y[j] = original + h;
+			double forward = deriv(y);
+			y[j] = original - h;
+			double backward = deriv(y);
+			y[j] = original;
+			
+			dfdy[i][j] = (forward - backward) / h2;
 		}
 	}
 	

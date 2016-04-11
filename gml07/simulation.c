@@ -12,19 +12,19 @@ void run(FILE *fp, double x2, bool print) {
 	xp = vector(1, KMAX);
 	yp = matrix(1, NVAR, 1, KMAX);
 	
-	double *vec_pHx = vector(1, NVAR);
-	vec_pHx[1] = 1e-27;
-	vec_pHx[2] = 1e-27;
-	// for (int i = 1; i <= NVAR; i++) { vec_pHx[i] = 0; }
+	double *vec_nHx = vector(1, NVAR);
+	vec_nHx[1] = 1e-3;
+	vec_nHx[2] = 1e-3;
+	// for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
 	
 	double eps = 1e-9;
 	double h1  = 1e-5;
 	
 	int nok = 0, nbad = 0;
-	odeint(vec_pHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
+	odeint(vec_nHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
 	
-	double nH2 = vec_pHx[1];
-	double nH_p = vec_pHx[2];
+	double nH2 = vec_nHx[1];
+	double nH_p = vec_nHx[2];
 	
 	if (print) {
 		printf("s     = %G\n\n", (double) x2);
@@ -50,7 +50,7 @@ void run(FILE *fp, double x2, bool print) {
 		fprintf(fp, "%G,%G,%G,%G,%G\n", myr, perc_h2, getTemp(), getGrainTemp(), perc_hp);
 	}
 	
-	free_vector(vec_pHx, 1, NVAR);
+	free_vector(vec_nHx, 1, NVAR);
 	free_matrix(yp, 1, NVAR, 1, KMAX);
 	free_vector(xp, 1, KMAX);
 }
