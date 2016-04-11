@@ -9,7 +9,7 @@ double getGrainTemp() { return GRAIN_TEMP; }
 void setGrainTemp(int t) { if (t > 0) GRAIN_TEMP = t; }
 
 /** Takes mass densities and converts to number density */
-double getnH(double pH2, double pH_p) { return N_H_tot - getnH2(pH2) - getnH_p(pH_p); }
+double getnH(double pH2, double pH_p) { return N_H_tot - 2*getnH2(pH2) - getnH_p(pH_p); }
 
 /** Takes mass density of H2 and converts to number density */
 double getnH2(double pH2) { return pH2 / (mu_h2*M_h); }
@@ -29,7 +29,7 @@ double getxH(double pH2, double pH_p) {
 }
 
 /** Derives the mass density of atomic hydrogen based on mass densities of H2 and H+ */
-double getpH(double pH2, double pH_p) { return N_H_tot*(mu_h*M_h) - pH2 - pH_p; };
+double getpH(double pH2, double pH_p) { return getnH(pH2, pH_p)*(mu_h*M_h); };
 
 /** Derives the abundance of e- based on the mass densities of H2 and H+ */
 double getxe(double pH_p) { 
@@ -43,28 +43,29 @@ double getne(double pH_p) {
 
 double dpH2(double vec_pHx[]) {
 	double pH2 = vec_pHx[1]
-			 , pH_p = vec_pHx[2]
-			 , pH = getpH(pH2, pH_p)
-			 , nH = getnH(pH2, pH_p)
-			 , nH2 = getnH2(pH2)
-			 , nH_p = getnH_p(pH_p);
+		 , pH_p = vec_pHx[2]
+		 , nH = getnH(pH2, pH_p)
+		 , nH2 = getnH2(pH2)
+		 , nH_p = getnH_p(pH_p);
 	
-	return k1(TEMP, GRAIN_TEMP)*pH*nH - k2(TEMP,nH2,nH_p)*pH2*nH - k3(TEMP,nH2,nH_p)*pH2*nH2 - SELF_SHIELDING*pH2;
+	return M_h*mu_h2 * (k1(TEMP, GRAIN_TEMP)*nH*nH - k2(TEMP,nH2,nH_p)*nH2*nH - k3(TEMP,nH2,nH_p)*nH2*nH2 - SELF_SHIELDING*nH2);
 }
 
 double dpH_p(double vec_pHx[]) {
-	double pH2 = vec_pHx[1]
-			 , pH_p = vec_pHx[2]
-			 , pH = getpH(pH2, pH_p)
-			 , ne = getne(pH_p);
+	double pH2  = vec_pHx[1]
+	     , pH_p = vec_pHx[2]
+		 , nH   = getnH(pH2, pH_p)
+		 , nH_p = getnH_p(pH_p)
+		 , ne   = getne(pH_p);
 	
-	return k6(TEMP)*pH*ne - k7(TEMP)*pH_p*ne - k8(TEMP,ne)*pH_p*ne + COSMIC_RAY_RATE*pH;
+	return M_h*mu_h * (k6(TEMP)*nH*ne - k7(TEMP)*nH_p*ne - k8(TEMP,ne)*nH_p*ne + COSMIC_RAY_RATE*nH);
 }
 
 // run a step of the derivatives
 void derivs(double x, int nvar, double vec_pHx[], double vec_dpHxdt[]) {
 	for (int i = 1; i <= nvar; i += 2) {		
-		double *sub_vec_pHx = vec_pHx + i-1;
+		double *sub_vec_pHx = vec_pHx + (i-1);
+		
 		// pH2
 		vec_dpHxdt[i] = dpH2(sub_vec_pHx);
 		
@@ -81,18 +82,21 @@ void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 		dfdx[i] = 0.0;
 		dfdx[i+1] = 0.0;
 		
+		/*
+		double *sub_vec_pHx = vec_pHx + (i-1);
+		jacobian(derivs_arr, 2, sub_vec_pHx, 1e-32, dfdy, nvar);
+		*/
+		
 		double pH2 = vec_pHx[i]
 			 , pH_p = vec_pHx[i+1]
 			 , pH = getpH(pH2, pH_p)
 			 , nH = getnH(pH2, pH_p);
 		
-		// jacobian(derivs_arr, 2, vec_pHx, 1e-30, dfdy, nvar);
-		
 		// dpH2 / dpH2
 		dfdy[i][1] = k1(TEMP, GRAIN_TEMP)*pH*(-1/(mu_h*M_h)) 
 						- k2(TEMP, pH2, pH_p)*nH 
-						- k2(TEMP, pH2, pH_p)*pH2*(-1/(mu_h2*M_h)) 
-						- (2*k3(TEMP, pH2, pH_p)*pH2)/(mu_h2*M_h)
+						- k2(TEMP, pH2, pH_p)*pH2*(-2/(mu_h2*M_h)) 
+						- (4*k3(TEMP, pH2, pH_p)*pH2)/(mu_h2*M_h)
 						+ SELF_SHIELDING;
 						
 		// dpH2 / dpH+
@@ -100,11 +104,11 @@ void jacobn(double x, double vec_pHx[], double dfdx[], double **dfdy, int nvar)
 						- (k2(TEMP, pH2, pH_p)*pH2)/(mu_h*M_h);
 		
 		// dpH+ / dpH2
-		dfdy[i+1][1] = -k6(TEMP)*(mu_h/mu_h2)*(pH_p/(mu_h*M_h) + nSi + nC)
-						- COSMIC_RAY_RATE*(mu_h/mu_h2);
+		dfdy[i+1][1] = -k6(TEMP)*(2*mu_h/mu_h2)*(pH_p/(mu_h*M_h) + nSi + nC)
+						- COSMIC_RAY_RATE*(2*mu_h/mu_h2);
 		
 		// dpH+ / dpH+	
-		dfdy[i+1][2] = k6(TEMP)*(N_H_tot - nC - nSi - pH2/(mu_h2*M_h) - 2*pH_p/(mu_h*M_h)) 
+		dfdy[i+1][2] = k6(TEMP)*(N_H_tot - nC - nSi - 2*pH2/(mu_h2*M_h) - 2*pH_p/(mu_h*M_h)) 
 						- (k7(TEMP) + k8(TEMP,pH_p))*(2*pH_p/(mu_h*M_h) + nSi + nC)
 						- COSMIC_RAY_RATE;
 	}

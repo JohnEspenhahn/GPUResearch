@@ -1,4 +1,4 @@
-#include "simulation.h"
+#include "../simulation.h"
 
 #define ZONES 1
 #define NVAR 14*ZONES

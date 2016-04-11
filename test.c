@@ -103,7 +103,7 @@ void compareJacobn(FILE *fp, int steps) {
 			jacobn(0, nHx, dfdx, dfdy, 2);
 			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
 			
-			jacobian(derivs, 2, nHx, 1e-30, dfdy, 2);
+			jacobian(derivs, 2, nHx, 1e-8, dfdy, 2);
 			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
 		}
 	}

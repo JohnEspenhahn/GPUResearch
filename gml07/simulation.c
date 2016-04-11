@@ -17,8 +17,8 @@ void run(FILE *fp, double x2, bool print) {
 	vec_pHx[2] = 1e-27;
 	// for (int i = 1; i <= NVAR; i++) { vec_pHx[i] = 0; }
 	
-	double eps = 1e-8;
-	double h1  = 1e-8;
+	double eps = 1e-9;
+	double h1  = 1e-5;
 	
 	int nok = 0, nbad = 0;
 	odeint(vec_pHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
@@ -31,7 +31,7 @@ void run(FILE *fp, double x2, bool print) {
 		printf("nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
 		printf("pH2, pH_p, pH = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
 		printf("sum pHs = %G\n", pH2+pH_p+getpH(pH2,pH_p));
-		printf("sum nHs = %G\n", getnH2(pH2)*mu_h*M_h + getnH_p(pH_p)*mu_h*M_h + getnH(pH2,pH_p)*mu_h*M_h);
+		printf("sum nHs = %G\n", getnH2(pH2)*mu_h2*M_h + getnH_p(pH_p)*mu_h*M_h + getnH(pH2,pH_p)*mu_h*M_h);
 		
 		printf("%% pH2 = %G\n", getxH2(pH2) / xH_tot);
 		printf("%% pHp = %G\n", getxH_p(pH_p) / xH_tot);
