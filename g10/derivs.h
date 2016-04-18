@@ -8,20 +8,22 @@
 #include "../jacobian.h"
 
 #define N_tot 300.0  // cm^-3
+
 #define xSi 1.5e-5
-#define xH_m  0
-#define xH2_p 0
-#define xH3_p 0
-#define xCH_p 0
-#define xCH2_p 0
-#define xOH_p 0
-#define xH2O_p 0
-#define xH3O_p 0
-#define xCO_p 0
-#define xHOC_p 0
-#define xO_m 0
-#define xC_m 0
-#define xO2_p 0
+
+#define xH_m 1e-6
+#define xH2_p 1e-6
+#define xH3_p 1e-6
+#define xCH_p 1e-6
+#define xCH2_p 1e-6
+#define xOH_p 1e-6
+#define xH2O_p 1e-6
+#define xH3O_p 1e-6
+#define xCO_p 1e-6
+#define xHOC_p 1e-6
+#define xO_m 1e-6
+#define xC_m 1e-6
+#define xO2_p 1e-6
 
 #define nSi (N_tot*xSi)
 #define nH_m (N_tot*xH_m)
@@ -38,7 +40,13 @@
 #define nC_m (N_tot*xC_m)
 #define nO2_p (N_tot*xO2_p)
 
-#define xH_tot (1.0 - xC - xO - xSi - xHe)
+// Define total abundance for dissociated species
+#define xSi_tot xSi
+#define xC_tot  1.41e-4
+#define xO_tot  3.16e-4
+#define xHe_tot 0.1
+
+#define xH_tot  (1.0 - xHe_tot - xC_tot - xO_tot - xSi_tot)
 
 // Define total number density of dissociated species
 #define N_H_tot (N_tot*xH_tot)
@@ -56,8 +64,8 @@
 
 #define STEP_TIME 1 // s
 
-double dpH2(double vec_pHx[]);
-double dpH_p(double vec_pHx[]);
+double getxH2(double vec_pHx[]);
+double getxH(double vec_pHx[]);
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
@@ -94,8 +102,8 @@ double k5(double t);
 double k6(double t);
 double k7(double t);
 double k8(double t);
-double k9(double t);
-double k10(double t);
+double k9(double t, double nH);
+double k10(double t, double nH2);
 double k11(double t);
 double k12(double t);
 double k13(double t);
@@ -115,7 +123,7 @@ double k26(double t);
 double k27(double t);
 double k28(double t);
 double k29(double t);
-double k30(double t);
+double k30(double t, double nH2);
 double k31(double t);
 double k32(double t);
 double k33(double t);
@@ -250,7 +258,7 @@ double k161(double t);
 double k162(double t);
 double k163(double t);
 double k164(double t);
-double k165(double t);
+double k165(double t, double temp_grain);
 
 
 #endif

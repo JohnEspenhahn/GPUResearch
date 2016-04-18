@@ -1,5 +1,5 @@
 #include "test.h"
-#include "gml07/derivs.h"
+#include "g10/derivs.h"
 #include "odeint.h"
 #include "stiff.h"
 #include <stdio.h>
@@ -10,120 +10,178 @@ double end_pH2 = 1e-22;
 double end_pH_p = 1e-25;
 double end_temp = 199;
 
-void plotK1(FILE *fp, int steps) {
-	for (double temp = 1; temp <= 1001; temp += 100) {
-		for (double grain_temp = 1; grain_temp <= 1001; grain_temp += 100) {
-			fprintf(fp, "k1,%G,%G,,%G\n", temp, grain_temp, k1(temp,grain_temp));
-		}
+double (*karr[])(double) = {
+k1,
+k2,
+k3,
+k4,
+k5,
+k6,
+k7,
+k8,
+// k9,
+// k10,
+k11,
+k12,
+k13,
+k14,
+k15,
+k16,
+k17,
+k18,
+k19,
+k20,
+k21,
+k22,
+k23,
+k24,
+k25,
+k26,
+k27,
+k28,
+k29,
+// k30,
+k31,
+k32,
+k33,
+k34,
+k35,
+k36,
+k37,
+k38,
+k39,
+k40,
+k41,
+k42,
+k43,
+k44,
+k45,
+k46,
+k47,
+k48,
+k49,
+k50,
+k51,
+k52,
+k53,
+k54,
+k55,
+k56,
+k57,
+k58,
+k59,
+k60,
+k61,
+k62,
+k63,
+k64,
+k65,
+k66,
+k67,
+k68,
+k69,
+k70,
+k71,
+k72,
+k73,
+k74,
+k75,
+k76,
+k77,
+k78,
+k79,
+k80,
+k81,
+k82,
+k83,
+k84,
+k85,
+k86,
+k87,
+k88,
+k89,
+k90,
+k91,
+k92,
+k93,
+k94,
+k95,
+k96,
+k97,
+k98,
+k99,
+k100,
+k101,
+k102,
+k103,
+k104,
+k105,
+k106,
+k107,
+k108,
+k109,
+k110,
+k111,
+k112,
+k113,
+k114,
+k115,
+k116,
+k117,
+k118,
+k119,
+k120,
+k121,
+k122,
+k123,
+k124,
+k125,
+k126,
+k127,
+k128,
+k129,
+k130,
+k131,
+k132,
+k133,
+k134,
+k135,
+k136,
+k137,
+k138,
+k139,
+k140,
+k141,
+k142,
+k143,
+k144,
+k145,
+k146,
+k147,
+k148,
+k149,
+k150,
+k151,
+k152,
+k153,
+k154,
+k155,
+k156,
+k157,
+k158,
+k159,
+k160,
+k161,
+k162,
+k163,
+k164,
+// k165
+};
+
+void testks(FILE *fp, double t) {
+	for (int i = 0; i < sizeof(karr)/sizeof(double*); i++) {
+		fprintf(fp, "%d,%G\n", i, karr[i](t));
 	}
-}
-
-void plotK2(FILE *fp, int steps) {
-	for (double pH2 = 0; pH2 < end_pH2; pH2 += end_pH2 / steps) {
-		for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p / steps) {
-			fprintf(fp, "k2,%G,%G,%G,%G\n", TEMP_INIT, pH2, pH_p, k2(TEMP_INIT,pH2,pH_p));
-		}
-	}
-}
-
-void plotK3(FILE *fp, int steps) {
-	for (double pH2 = 0; pH2 < end_pH2; pH2 += end_pH2 / steps) {
-		for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p / steps) {
-			fprintf(fp, "k3,%G,%G,%G,%G\n", TEMP_INIT, pH2, pH_p, k3(TEMP_INIT,pH2,pH_p));
-		}
-	}
-}
-
-void plotK6(FILE *fp, int steps) { 
-	fprintf(fp, "k6,%G,,,%G\n", TEMP_INIT, k6(TEMP_INIT));
-}
-
-void plotK7(FILE *fp, int steps) { 
-	fprintf(fp, "k7,%G,,,%G\n", TEMP_INIT, k7(TEMP_INIT));
-}
-
-void plotK8(FILE *fp, int steps) { 
-	for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p / steps) {
-		fprintf(fp, "k8,%G,,%G,%G\n", TEMP_INIT, pH_p, k8(TEMP_INIT,pH_p));
-	}
-}
-
-void plotH_p(FILE *fp, int steps) {
-	for (double temp = 1; temp < end_temp; temp += end_temp / steps) {
-		for (double pH2 = 0; pH2 < end_pH2; pH2 += end_pH2 / steps) {
-			for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p / steps) {
-				double ne = getne(pH_p)
-					 , pH = getpH(pH2,pH_p);
-				fprintf(fp, "dH_p,%G,%G,%G,%G\n", temp, pH2, pH_p, k6(temp)*pH*ne - k7(temp)*pH_p*ne - k8(temp,pH_p)*pH_p*ne + COSMIC_RAY_RATE*pH);
-			}
-		}
-	}
-}
-
-void plotH2(FILE *fp, int steps) {
-	for (double temp = 1; temp < end_temp; temp += end_temp / steps) {
-		for (double pH2 = 0; pH2 < end_pH2; pH2 += end_pH2 / steps) {
-			for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p / steps) {
-				double nH = getnH(pH2,pH_p);
-				fprintf(fp, "dH2,%G,%G,%G,%G\n", temp, pH2, pH_p, k1(temp,temp)*getpH(pH2,pH_p)*nH - k2(temp,pH2,pH_p)*pH2*nH - k3(temp,pH2,pH_p)*pH2*getnH2(pH2) - SELF_SHIELDING*pH2);
-			}
-		}
-	}
-}
-
-void plotDerivs(FILE *fp) {
-	double *nHx = vector(1,2);
-	double *dnHx = vector(1,2);
-	
-	for (double pH2 = 2; pH2 < 90; pH2 += 2) {
-		for (double pH_p = 2; pH_p < 90; pH_p += 2) {
-			nHx[1] = pH2;
-			nHx[2] = pH_p;
-			
-			derivs(0, 2, nHx, dnHx);
-			fprintf(fp, "%G,%G,%G,%G\n", pH2, pH_p, dnHx[1], dnHx[2]);
-		}
-	}
-}
-
-void compareJacobn(FILE *fp, int steps) {
-	double *nHx = vector(1,2);	
-	double *dfdx = vector(1,2);
-	double **dfdy = matrix(1,2,1,2);
-	double (*derivs[])(double[]) = { &dpH2, &dpH_p };
-	
-	for (double pH2 = 0; pH2 < end_pH2; pH2 += end_pH2/steps) {
-		for (double pH_p = 0; pH_p < end_pH_p; pH_p += end_pH_p/steps) {
-			nHx[1] = pH2;
-			nHx[2] = pH_p;
-			
-			// fprintf(fp, "nH2, nH_p, nH = %G,%G,%G\n", getnH2(pH2), getnH_p(pH_p), getnH(pH2,pH_p));
-			printf("pH2, pH_p, pH = %G,%G,%G\n", pH2, pH_p, getpH(pH2,pH_p));
-			
-			jacobn(0, nHx, dfdx, dfdy, 2);
-			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
-			
-			jacobian(derivs, 2, nHx, 1e-8, dfdy, 2);
-			printf("%G,%G,%G,%G\n", dfdy[1][1], dfdy[1][2], dfdy[2][1], dfdy[2][2]);
-		}
-	}
-}
-
-void printArray(double* arr, int i, int j) {
-	for (;i <= j;i++) {
-		printf("%f\t", arr[i]);
-	}
-	printf("\n");
-}
-
-void testCopy() {
-	double *v1 = vector(1,5), *v2 = vector(1,10);
-	for (int i = 1; i <= 10; i++) v2[i] = i;
-	
-	copy_vector(v2+5, v1, 1, 5);
-	
-	printArray(v1, 1, 5);
-	printArray(v2, 1, 10);
 }
 
 void outputRates() {
@@ -131,20 +189,7 @@ void outputRates() {
 	
 	int steps = 5;	
 	
-	// printf("f sheild %G\n", fshield);
-	printf("self sheild %G\n", SELF_SHIELDING);
-	
-	// plotK1(fp, steps);
-	
-	// plotH2(fp, steps);
-	// plotH_p(fp, steps);
-	
-	/* plotK1(fp, steps);
-	plotK2(fp, steps);
-	plotK3(fp, steps);
-	plotK6(fp, steps);
-	plotK7(fp, steps);
-	plotK8(fp, steps);	 */
+	testks(fp, 50.0);
 	
 	// compareJacobn(fp, steps);
 	// testCopy();

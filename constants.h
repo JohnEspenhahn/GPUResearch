@@ -10,7 +10,7 @@
 #define mu_o 8
 #define mu_oh (mu_o + mu_h)
 #define mu_h2o (mu_h2 + mu_o)
-#define mu_co (mu_c + mu_p)
+#define mu_co (mu_c + mu_o)
 #define mu_c2 (2*mu_c)
 #define mu_o2 (2*mu_o)
 #define mu_hco (mu_h + mu_c + mu_o)
