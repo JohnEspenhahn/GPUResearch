@@ -67,7 +67,8 @@ double getne(double nH_p, double nHe_p, double nC_p, double nO_p, double nHCO_p,
 }
 
 double getxe(double nH_p, double nHe_p, double nC_p, double nO_p, double nHCO_p, double nCH3_p) {
-	return -xH_m + xH2_p + xH3_p + xCH_p + xCH2_p + xOH_p + xH2O_p + xH3O_p + xCO_p + xHOC_p - xO_m - xC_m + xO2_p + (nH_p+nHe_p+nC_p+nO_p+nHCO_p+nCH3_p) / N_tot;
+	return -xH_m + xH2_p + xH3_p + xCH_p + xCH2_p + xOH_p + xH2O_p + xH3O_p + xCO_p + xHOC_p - xO_m - xC_m + xO2_p 
+				+ (nH_p+nHe_p+nC_p+nO_p+nHCO_p+nCH3_p) / N_tot;
 }
 
 double dnH_p(double sub_vec_nHx[]) {
@@ -367,7 +368,7 @@ void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 	for (int i = 1; i <= nvar; i += 14) {
 		// copy_vector(vec_nHx + (i-1), y_temp, 1, nvar);
 		double *y_temp = vec_nHx + (i-1);		
-		jacobian(derivs_arr, 14, y_temp, 1e-30, dfdy, nvar);
+		jacobian(derivs_arr, 14, y_temp, 1e-20, dfdy, nvar);
 	}
 }
 
@@ -451,7 +452,8 @@ double k16(double t) {
 }
 double k17(double t) {
 	double lt = log10(t); // log
-	return 1e-11*pow(t,-0.5)*(11.19 - 1.676*lt - 0.2852*lt*lt + 0.04433*lt*lt*lt);
+	double di = 0; // TODO dielectric
+	return 1e-11*pow(t,-0.5)*(11.19 - 1.676*lt - 0.2852*lt*lt + 0.04433*lt*lt*lt) + di;
 }
 double k18(double t) {
 	return 1.25e-15*pow(t/300,0.25);

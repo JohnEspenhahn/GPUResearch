@@ -5,12 +5,18 @@ import java.util.List;
 
 public class ODEEntry {
 	private List<Equation> creation, distruction;
+	
+	/** The species for which this is determining the derivative */
 	private String derv;
 	
 	public ODEEntry(String derv) {
 		this.derv = derv;
 		this.creation = new ArrayList<Equation>();
 		this.distruction = new ArrayList<Equation>();
+	}
+	
+	public String getDeriv() {
+		return derv;
 	}
 	
 	public void addCreationEq(Equation c) {
@@ -28,11 +34,11 @@ public class ODEEntry {
 		for (Equation e: creation) {
 			if (first) first = false;
 			else str += " + ";
-			str += e.asODEEntry(derv.replace("_p", ""));
+			str += e.asODEEntry();
 		}
 		
 		for (Equation e: distruction) {
-			str += " - " + e.asODEEntry(derv);
+			str += " - " + e.asODEEntry();
 		}
 		
 		return str;

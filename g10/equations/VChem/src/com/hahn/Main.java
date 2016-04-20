@@ -34,6 +34,21 @@ public class Main {
 		ode_eqs.put("CH2", new ODEEntry("CH2"));
 		ode_eqs.put("CH3_p", new ODEEntry("CH3_p"));
 		
+		// Equilibrium
+		ode_eqs.put("H_m", new ODEEntry("H_m"));
+		ode_eqs.put("H2_p", new ODEEntry("H2_p"));
+		ode_eqs.put("H3_p", new ODEEntry("H3_p"));
+		ode_eqs.put("CH_p", new ODEEntry("CH_p"));
+		ode_eqs.put("CH2_p", new ODEEntry("CH2_p"));
+		ode_eqs.put("OH_p", new ODEEntry("OH_p"));
+		ode_eqs.put("H2O_p", new ODEEntry("H2O_p"));
+		ode_eqs.put("H3O_p", new ODEEntry("H3O_p"));
+		ode_eqs.put("CO_p", new ODEEntry("CO_p"));
+		ode_eqs.put("HOC_p", new ODEEntry("HOC_p"));
+		ode_eqs.put("O_m", new ODEEntry("O_m"));
+		ode_eqs.put("C_m", new ODEEntry("C_m"));
+		ode_eqs.put("O2_p", new ODEEntry("O2_p"));
+		
 		
 		Scanner s = new Scanner(new File("equations.csv"));
 		
