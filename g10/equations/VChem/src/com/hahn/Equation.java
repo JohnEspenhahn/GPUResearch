@@ -45,12 +45,9 @@ public class Equation {
 	private void parseElements(String eq, Map<String, Byte> map, int species_add, Map<String, EquationProduct> species_map) {
 		for (String species: eq.split("\\s+")) {
 			// Track species
-			EquationProduct oldSpeciesCount = species_map.get(species);
-			if (oldSpeciesCount == null) {
-				oldSpeciesCount = new EquationProduct();
-				species_map.put(species, oldSpeciesCount);
-			}
-			oldSpeciesCount.add(species_add);
+			EquationProduct speciesCount = species_map.getOrDefault(species, new EquationProduct());
+			speciesCount.add(species_add);
+			species_map.put(species, speciesCount);
 			
 			// Track elements
 			Matcher matcher = elements.matcher(species);

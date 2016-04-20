@@ -83,7 +83,7 @@ public class Main {
 		
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f.getCanonicalPath(), true)));
 		for (Entry<String, ODEEntry> ode: ode_eqs.entrySet()) {
-			out.println(ode.toString());		    
+			out.println(ODEEntryFormat.format(ode.getValue()));	    
 		}
 		out.close();
 	}
