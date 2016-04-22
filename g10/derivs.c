@@ -20,17 +20,17 @@ double getnO(double nO_p, double nOH, double nH2O, double nCO, double nO2, doubl
 }
 
 double getxH(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13];
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14];
 	
 	return getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p) / N_tot;
 }
 
 double getxH2(double sub_vec_nHx[]) {
-	double nH2 = sub_vec_nHx[1];
+	double nH2 = sub_vec_nHx[2];
 	return (2*nH2) / N_tot;
 }
 
@@ -72,11 +72,11 @@ double getxe(double nH_p, double nHe_p, double nC_p, double nO_p, double nHCO_p,
 }
 
 double dnH_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -89,11 +89,11 @@ double dnH_p(double sub_vec_nHx[]) {
 }
 
 double dnH2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -107,11 +107,11 @@ double dnH2(double sub_vec_nHx[]) {
 }
 
 double dnHe_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -124,11 +124,11 @@ double dnHe_p(double sub_vec_nHx[]) {
 }
 
 double dnC_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -141,11 +141,11 @@ double dnC_p(double sub_vec_nHx[]) {
 }
 
 double dnO_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -158,11 +158,11 @@ double dnO_p(double sub_vec_nHx[]) {
 }
 
 double dnOH(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -175,11 +175,11 @@ double dnOH(double sub_vec_nHx[]) {
 }
 
 double dnH2O(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -192,11 +192,11 @@ double dnH2O(double sub_vec_nHx[]) {
 }
 
 double dnCO(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -209,11 +209,11 @@ double dnCO(double sub_vec_nHx[]) {
 }
 
 double dnC2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -226,11 +226,11 @@ double dnC2(double sub_vec_nHx[]) {
 }
 
 double dnO2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -243,11 +243,11 @@ double dnO2(double sub_vec_nHx[]) {
 }
 
 double dnHCO_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -260,11 +260,11 @@ double dnHCO_p(double sub_vec_nHx[]) {
 }
 
 double dnCH(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -277,11 +277,11 @@ double dnCH(double sub_vec_nHx[]) {
 }
 
 double dnCH2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
@@ -294,11 +294,11 @@ double dnCH2(double sub_vec_nHx[]) {
 }
 
 double dnCH3_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[0], nH2  = sub_vec_nHx[1], nHe_p = sub_vec_nHx[2]
-			 , nC_p = sub_vec_nHx[3], nO_p = sub_vec_nHx[4], nOH   = sub_vec_nHx[5]
-			 , nH2O = sub_vec_nHx[6], nCO  = sub_vec_nHx[7], nC2   = sub_vec_nHx[8]
-			 , nO2  = sub_vec_nHx[9], nHCO_p = sub_vec_nHx[10], nCH = sub_vec_nHx[11]
-			 , nCH2 = sub_vec_nHx[12], nCH3_p = sub_vec_nHx[13]
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
 			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
 			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
 			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
