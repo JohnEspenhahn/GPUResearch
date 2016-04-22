@@ -64,7 +64,7 @@ void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 		dfdx[i+1] = 0.0;
 		
 		double *sub_vec_nHx = vec_nHx + (i-1);
-		jacobian(derivs_arr, 2, sub_vec_nHx, 1e-6, dfdy, nvar);
+		jacobian(derivs_arr, 2, sub_vec_nHx, 1e-7, dfdy, nvar);
 	}
 }
 
