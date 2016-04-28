@@ -7,10 +7,16 @@
 // #include <cmath.h>
 #include "../jacobian.h"
 
+#define ZONES 1
+#define NDERV 27
+#define NVAR (NDERV*ZONES)
+
 #define N_tot 300.0  // cm^-3
 
 #define xSi 1.5e-5
+#define nSi (N_tot*xSi)
 
+/*
 #define xH_m 1e-6
 #define xH2_p 1e-6
 #define xH3_p 1e-6
@@ -25,7 +31,6 @@
 #define xC_m 1e-6
 #define xO2_p 1e-6
 
-#define nSi (N_tot*xSi)
 #define nH_m (N_tot*xH_m)
 #define nH2_p (N_tot*xH2_p)
 #define nH3_p (N_tot*xH3_p)
@@ -39,6 +44,7 @@
 #define nO_m (N_tot*xO_m)
 #define nC_m (N_tot*xC_m)
 #define nO2_p (N_tot*xO2_p)
+*/
 
 // Define total abundance for dissociated species
 #define xSi_tot xSi
@@ -69,24 +75,6 @@ double getxH(double vec_pHx[]);
 
 void derivs(double t, int nvar, double vec_nHx[], double vec_dnHxdt[]);
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar);
-
-double getnH_p(double pH_p);
-double getnH2(double pH2);
-double getnHe_p(double pHe_p);
-double getnC_p(double pC_p);
-double getnO_p(double pO_p);
-double getnOH(double pOH);
-double getnH2O(double pH2O);
-double getnCO(double pCO);
-double getnC2(double pC2);
-double getnO2(double pO2);
-double getnHCO_p(double pHCO_p);
-double getnCH(double pCH);
-double getnCH2(double pCH2);
-double getnCH3_p(double pCH3_p);
-double getne(double pH_p, double pHe_p, double pC_p, double pO_p, double pHCO_p, double pCH3_p);
-
-double getxe(double pH_p, double pHe_p, double pC_p, double pO_p, double pHCO_p, double pCH3_p);
 
 double getTemp();
 void setTemp(int t);

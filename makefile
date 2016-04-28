@@ -1,4 +1,4 @@
-PAPER=g10
+PAPER=gml07
 SOURCE=odeint.h odeint.c nrutil.h nrutil.c stiff.h stiff.c stifbs.h stifbs.c $(PAPER)/derivs.h $(PAPER)/derivs.c oiutil.h oiutil.c $(PAPER)/simulation.c simulation.h jacobian.h jacobian.c
 FLAGS=-Wno-unused-variable -std=c99
 DEBUG=-g

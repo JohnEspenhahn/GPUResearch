@@ -2,31 +2,70 @@
 
 int T = TEMP_INIT, GRAIN_TEMP = GRAIN_TEMP_INIT;
 
-// mu for CH2 is about 14*mu_h (C = 12, h2 = 2)
-double getnH(double nH_p, double nH2, double nOH, double nH2O, double nHCO_p, double nCH, double nCH2, double nCH3_p) {
-	return N_H_tot - nH_p - 2*nH2 - nOH - 2*nH2O - nHCO_p - nCH - 2*nCH2 - 3*nCH3_p - nH_m - 2*nH2_p - 3*nH3_p - nCH_p - 2*nCH2_p - nOH_p - 2*nH2O_p - 3*nH3O_p - nHOC_p;
-}
-
-double getnHe(double nHe_p) {
-	return N_He_tot - nHe_p;
-}
-
-double getnC(double nC_p, double nCO, double nC2, double nHCO_p, double nCH, double nCH2, double nCH3_p) {
-	return N_C_tot - nC_p - nCO - 2*nC2 - nHCO_p - nCH - nCH2 - nCH3_p - nCH_p - nCH2_p - nCO_p - nHOC_p - nC_m;
-}
-
-double getnO(double nO_p, double nOH, double nH2O, double nCO, double nO2, double nHCO_p) {
-	return N_O_tot - nO_p - nOH - nH2O - nCO - 2*nO2 - nHCO_p - nOH_p - nH2O_p - nH3O_p - nCO_p - nHOC_p - nO_m - 2*nO2_p;
-}
-
-double getxH(double sub_vec_nHx[]) {
+double getnH(double sub_vec_nHx[]) {
 	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14];
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27];
 	
-	return getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p) / N_tot;
+	return N_H_tot - nH_p - 2*nH2 - nOH - 2*nH2O - nHCO_p - nCH - 2*nCH2 - 3*nCH3_p - nH_m - 2*nH2_p - 3*nH3_p - nCH_p - 2*nCH2_p - nOH_p - 2*nH2O_p - 3*nH3O_p - nHOC_p;
+}
+
+double getnHe(double sub_vec_nHx[]) {
+	double nHe_p = sub_vec_nHx[3];
+	return N_He_tot - nHe_p;
+}
+
+double getnC(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27];
+	
+	return N_C_tot - nC_p - nCO - 2*nC2 - nHCO_p - nCH - nCH2 - nCH3_p - nCH_p - nCH2_p - nCO_p - nHOC_p - nC_m;
+}
+
+double getnO(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27];
+	
+	return N_O_tot - nO_p - nOH - nH2O - nCO - 2*nO2 - nHCO_p - nOH_p - nH2O_p - nH3O_p - nCO_p - nHOC_p - nO_m - 2*nO2_p;
+}
+
+double getne(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27];
+	
+	return -nH_m + nH2_p + nH3_p + nCH_p + nCH2_p + nOH_p + nH2O_p + nH3O_p + nCO_p + nHOC_p - nO_m - nC_m + nO2_p 
+				+ nH_p + nHe_p + nC_p + nO_p + nHCO_p + nCH3_p;
+}
+
+double getxH(double sub_vec_nHx[]) {
+	return getnH(sub_vec_nHx) / N_tot;
 }
 
 double getxH2(double sub_vec_nHx[]) {
@@ -62,99 +101,214 @@ double getpCH2(double nCH2) { return nCH2 * (mu_ch2 * M_h); }
 
 double getpCH3_p(double nCH3_p) { return nCH3_p * (mu_ch3 * M_h); }
 
-double getne(double nH_p, double nHe_p, double nC_p, double nO_p, double nHCO_p, double nCH3_p) {
-	return getxe(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p) * N_tot;
-}
-
-double getxe(double nH_p, double nHe_p, double nC_p, double nO_p, double nHCO_p, double nCH3_p) {
-	return -xH_m + xH2_p + xH3_p + xCH_p + xCH2_p + xOH_p + xH2O_p + xH3O_p + xCO_p + xHOC_p - xO_m - xC_m + xO2_p 
-				+ (nH_p+nHe_p+nC_p+nO_p+nHCO_p+nCH3_p) / N_tot;
-}
-
-double dnH_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k4(t)*nH*nH2_p + k11(t)*ne*nH + k18(t)*nH*nHe_p + k24(t)*nO_p*nH + k28(t)*nC_p*nH + k89(t)*nH2*nHe_p + k97(t)*nH2O*nHe_p + k106(t)*nCO_p*nH - k3(t)*nH*nH_p - k5(t)*nH_m*nH_p - k7(t)*nH_p*nH2 - k12(t)*ne*nH_p - k15(t)*nH_m*nH_p - k19(t)*nH_p*nHe - k25(t)*nH_p*nO - k27(t)*nC*nH_p - k62(t)*nH_p*nCH2 - k90(t)*nCH*nH_p - k91(t)*nH_p*nCH2 - k94(t)*nH_p*nOH - k96(t)*nH2O*nH_p - k100(t)*nO2*nH_p - k107(t)*nC_m*nH_p - k108(t)*nH_p*nO_m - k141(t)*nH_p*nH2;
-}
-
-double dnH2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , grain_temp = GRAIN_TEMP
-			 , t = T;
-	
-	return k2(t)*nH_m*nH + k4(t)*nH*nH2_p + k35(t)*nCH*nH + k39(t)*nH*nCH2 + k41(t)*nCH2*nO + k44(t)*nH*nOH + k49(t)*nH2O*nH + k55(t)*nH*nH3_p + k57(t)*nC*nH3_p + k59(t)*nH*nCH_p + k62(t)*nH_p*nCH2 + k63(t)*nH*nCH2_p + k66(t)*nH*nCH3_p + k67(t)*nCH3_p*nO + k71(t)*nH3_p*nO + k72(t)*nOH*nH3_p + k76(t)*nH2O*nH3_p + k79(t)*nC*nH3O_p + k84(t)*nCO*nH3_p + k85(t)*nCO*nH3_p + k92(t)*nCH2*nHe_p + k110(t)*ne*nH3_p + k115(t)*ne*nCH2_p + k117(t)*ne*nCH3_p + k121(t)*ne*nH2O_p + k124(t)*ne*nH3O_p + k126(t)*ne*nH3O_p + k154(t)*nH*nH*nH + k155(t)*nH*nH*nH2 + k156(t)*nH*nH*nHe + k165(t,grain_temp)*nH*nH - k7(t)*nH_p*nH2 - k8(t)*ne*nH2 - k9(t,nH)*nH*nH2 - k10(t,nH2)*nH2*nH2 - k30(t,nH2)*nH2*nHe - k34(t)*nC*nH2 - k36(t)*nCH*nH2 - k43(t)*nH2*nO - k45(t)*nOH*nH2 - k51(t)*nO2*nH2 - k54(t)*nH2_p*nH2 - k58(t)*nC_p*nH2 - k60(t)*nCH_p*nH2 - k64(t)*nH2*nCH2_p - k69(t)*nO_p*nH2 - k74(t)*nH2*nOH_p - k75(t)*nH2O_p*nH2 - k88(t)*nH2*nHe_p - k89(t)*nH2*nHe_p - k136(t)*nC_m*nH2 - k139(t)*nH2*nO_m - k141(t)*nH_p*nH2 - k144(t)*nC*nH2 - k148(t)*nC_p*nH2;
-}
-
-double dnHe_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k16(t)*ne*nHe + k19(t)*nH_p*nHe - k17(t)*ne*nHe_p - k18(t)*nH*nHe_p - k26(t)*nHe_p*nO - k29(t)*nC*nHe_p - k88(t)*nH2*nHe_p - k89(t)*nH2*nHe_p - k92(t)*nCH2*nHe_p - k93(t)*nHe_p*nC2 - k95(t)*nOH*nHe_p - k97(t)*nH2O*nHe_p - k98(t)*nH2O*nHe_p - k99(t)*nH2O*nHe_p - k101(t)*nO2*nHe_p - k102(t)*nO2*nHe_p - k104(t)*nCO*nHe_p - k105(t)*nCO*nHe_p - k109(t)*nH_m*nHe_p;
-}
-
-double dnC_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k22(t)*nC*ne + k27(t)*nC*nH_p + k29(t)*nC*nHe_p + k59(t)*nH*nCH_p + k92(t)*nCH2*nHe_p + k93(t)*nHe_p*nC2 + k103(t)*nO2_p*nC + k104(t)*nCO*nHe_p - k20(t)*nC_p*ne - k28(t)*nC_p*nH - k58(t)*nC_p*nH2 - k73(t)*nC_p*nOH - k77(t)*nH2O*nC_p - k78(t)*nH2O*nC_p - k80(t)*nO2*nC_p - k81(t)*nO2*nC_p - k147(t)*nC_p*nH - k148(t)*nC_p*nH2 - k149(t)*nC_p*nO - k159(t)*nC_p*nM*nO;
-}
-
 double dnO_p(double sub_vec_nHx[]) {
 	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
+
 	return k23(t)*ne*nO + k25(t)*nH_p*nO + k26(t)*nHe_p*nO + k81(t)*nO2*nC_p + k95(t)*nOH*nHe_p + k102(t)*nO2*nHe_p + k105(t)*nCO*nHe_p - k21(t)*nO_p*ne - k24(t)*nO_p*nH - k68(t)*nO_p*nC2 - k69(t)*nO_p*nH2 - k160(t)*nO_p*nC*nM;
+}
+
+double dnCO_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k61(t)*nCH_p*nO + k68(t)*nO_p*nC2 + k73(t)*nC_p*nOH + k80(t)*nO2*nC_p + k83(t)*nO2_p*nC + k149(t)*nC_p*nO + k159(t)*nC_p*nM*nO + k160(t)*nO_p*nC*nM - k106(t)*nCO_p*nH - k128(t)*nCO_p*ne;
+}
+
+double dnO2(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k47(t)*nOH*nO + k103(t)*nO2_p*nC + k152(t)*nO*nO + k163(t)*nM*nO*nO - k50(t)*nO2*nH - k51(t)*nO2*nH2 - k52(t)*nO2*nC - k80(t)*nO2*nC_p - k81(t)*nO2*nC_p - k82(t)*nO2*nCH2_p - k100(t)*nO2*nH_p - k101(t)*nO2*nHe_p - k102(t)*nO2*nHe_p;
+}
+
+double dnCH_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k56(t)*nC*nH2_p + k57(t)*nC*nH3_p + k58(t)*nC_p*nH2 + k62(t)*nH_p*nCH2 + k63(t)*nH*nCH2_p + k86(t)*nHCO_p*nC + k90(t)*nCH*nH_p + k147(t)*nC_p*nH - k59(t)*nH*nCH_p - k60(t)*nCH_p*nH2 - k61(t)*nCH_p*nO - k112(t)*ne*nCH_p;
+}
+
+double dnCH3_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k64(t)*nH2*nCH2_p - k66(t)*nH*nCH3_p - k67(t)*nCH3_p*nO - k116(t)*ne*nCH3_p - k117(t)*ne*nCH3_p - k118(t)*ne*nCH3_p;
+}
+
+double dnC2(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k37(t)*nC*nCH + k145(t)*nC*nC + k157(t)*nC*nC*nM - k42(t)*nC2*nO - k68(t)*nO_p*nC2 - k93(t)*nHe_p*nC2;
+}
+
+double dnCH2_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k60(t)*nCH_p*nH2 + k66(t)*nH*nCH3_p + k91(t)*nH_p*nCH2 + k148(t)*nC_p*nH2 - k63(t)*nH*nCH2_p - k64(t)*nH2*nCH2_p - k65(t)*nCH2_p*nO - k82(t)*nO2*nCH2_p - k113(t)*ne*nCH2_p - k114(t)*ne*nCH2_p - k115(t)*ne*nCH2_p;
+}
+
+double dnO2_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k100(t)*nO2*nH_p + k101(t)*nO2*nHe_p - k83(t)*nO2_p*nC - k103(t)*nO2_p*nC - k127(t)*nO2_p*ne;
+}
+
+double dnHOC_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k78(t)*nH2O*nC_p + k84(t)*nCO*nH3_p - k32(t)*nHOC_p*nH2 - k33(t)*nHOC_p*nCO - k131(t)*ne*nHOC_p;
+}
+
+double dnH2O_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k72(t)*nOH*nH3_p + k74(t)*nH2*nOH_p + k96(t)*nH2O*nH_p + k99(t)*nH2O*nHe_p - k75(t)*nH2O_p*nH2 - k120(t)*ne*nH2O_p - k121(t)*ne*nH2O_p - k122(t)*ne*nH2O_p;
 }
 
 double dnOH(double sub_vec_nHx[]) {
@@ -162,15 +316,19 @@ double dnOH(double sub_vec_nHx[]) {
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
+
 	return k43(t)*nH2*nO + k49(t)*nH2O*nH + k50(t)*nO2*nH + k51(t)*nO2*nH2 + k53(t)*nH*nCO + k82(t)*nO2*nCH2_p + k97(t)*nH2O*nHe_p + k122(t)*ne*nH2O_p + k124(t)*ne*nH3O_p + k125(t)*ne*nH3O_p + k130(t)*nHCO_p*ne + k133(t)*nH_m*nO + k138(t)*nH*nO_m + k151(t)*nH*nO + k161(t)*nH*nM*nO - k31(t)*nH*nOH - k44(t)*nH*nOH - k45(t)*nOH*nH2 - k46(t)*nC*nOH - k47(t)*nOH*nO - k48(t)*nOH*nOH - k72(t)*nOH*nH3_p - k73(t)*nC_p*nOH - k94(t)*nH_p*nOH - k95(t)*nOH*nHe_p - k134(t)*nH_m*nOH - k153(t)*nH*nOH - k162(t)*nH*nOH*nM;
 }
 
@@ -179,84 +337,20 @@ double dnH2O(double sub_vec_nHx[]) {
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
+
 	return k45(t)*nOH*nH2 + k48(t)*nOH*nOH + k123(t)*ne*nH3O_p + k134(t)*nH_m*nOH + k139(t)*nH2*nO_m + k153(t)*nH*nOH + k162(t)*nH*nOH*nM - k49(t)*nH2O*nH - k76(t)*nH2O*nH3_p - k77(t)*nH2O*nC_p - k78(t)*nH2O*nC_p - k87(t)*nHCO_p*nH2O - k96(t)*nH2O*nH_p - k97(t)*nH2O*nHe_p - k98(t)*nH2O*nHe_p - k99(t)*nH2O*nHe_p;
-}
-
-double dnCO(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k38(t)*nCH*nO + k40(t)*nCH2*nO + k41(t)*nCH2*nO + k42(t)*nC2*nO + k46(t)*nC*nOH + k52(t)*nO2*nC + k81(t)*nO2*nC_p + k86(t)*nHCO_p*nC + k87(t)*nHCO_p*nH2O + k106(t)*nCO_p*nH + k129(t)*nHCO_p*ne + k131(t)*ne*nHCO_p + k137(t)*nC_m*nO + k140(t)*nC*nO_m + k146(t)*nC*nO + k158(t)*nC*nM*nO - k53(t)*nH*nCO - k84(t)*nCO*nH3_p - k85(t)*nCO*nH3_p - k104(t)*nCO*nHe_p - k105(t)*nCO*nHe_p;
-}
-
-double dnC2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k37(t)*nC*nCH + k145(t)*nC*nC + k157(t)*nC*nC*nM - k42(t)*nC2*nO - k68(t)*nO_p*nC2 - k93(t)*nHe_p*nC2;
-}
-
-double dnO2(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k47(t)*nOH*nO + k103(t)*nO2_p*nC + k152(t)*nO*nO + k163(t)*nM*nM*nO - k50(t)*nO2*nH - k51(t)*nO2*nH2 - k52(t)*nO2*nC - k80(t)*nO2*nC_p - k81(t)*nO2*nC_p - k82(t)*nO2*nCH2_p - k100(t)*nO2*nH_p - k101(t)*nO2*nHe_p - k102(t)*nO2*nHe_p;
-}
-
-double dnHCO_p(double sub_vec_nHx[]) {
-	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
-			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
-			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
-			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
-			 , nM = nC + nO + nSi
-			 , t = T;
-	
-	return k32(t)*nHCO_p*nH2 + k33(t)*nHCO_p*nCO + k65(t)*nCH2_p*nO + k67(t)*nCH3_p*nO + k77(t)*nH2O*nC_p + k78(t)*nH2O*nC_p + k79(t)*nC*nH3O_p + k82(t)*nO2*nCH2_p + k85(t)*nCO*nH3_p + k164(t)*nCH*nO - k86(t)*nHCO_p*nC - k87(t)*nHCO_p*nH2O - k129(t)*nHCO_p*ne - k130(t)*nHCO_p*ne;
 }
 
 double dnCH(double sub_vec_nHx[]) {
@@ -264,16 +358,84 @@ double dnCH(double sub_vec_nHx[]) {
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
+
 	return k34(t)*nC*nH2 + k39(t)*nH*nCH2 + k113(t)*ne*nCH2_p + k117(t)*ne*nCH3_p + k118(t)*ne*nCH3_p + k132(t)*nC*nH_m + k135(t)*nC_m*nH + k143(t)*nC*nH - k35(t)*nCH*nH - k36(t)*nCH*nH2 - k37(t)*nC*nCH - k38(t)*nCH*nO - k90(t)*nCH*nH_p - k164(t)*nCH*nO;
+}
+
+double dnH2(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T
+			 , grain_temp = GRAIN_TEMP;
+
+	return k2(t)*nH_m*nH + k4(t)*nH*nH2_p + k35(t)*nCH*nH + k39(t)*nH*nCH2 + k41(t)*nCH2*nO + k44(t)*nH*nOH + k49(t)*nH2O*nH + k55(t)*nH*nH3_p + k57(t)*nC*nH3_p + k59(t)*nH*nCH_p + k62(t)*nH_p*nCH2 + k63(t)*nH*nCH2_p + k66(t)*nH*nCH3_p + k67(t)*nCH3_p*nO + k71(t)*nH3_p*nO + k72(t)*nOH*nH3_p + k76(t)*nH2O*nH3_p + k79(t)*nC*nH3O_p + k84(t)*nCO*nH3_p + k85(t)*nCO*nH3_p + k92(t)*nCH2*nHe_p + k110(t)*ne*nH3_p + k115(t)*ne*nCH2_p + k117(t)*ne*nCH3_p + k121(t)*ne*nH2O_p + k124(t)*ne*nH3O_p + k126(t)*ne*nH3O_p + k154(t)*nH*nH*nH + k155(t)*nH*nH*nH2 + k156(t)*nH*nH*nHe + k165(t,grain_temp)*nH*nH - k7(t)*nH_p*nH2 - k8(t)*ne*nH2 - k9(t,nH)*nH*nH2 - k10(t,nH2)*nH2*nH2 - k30(t,nH2)*nH2*nHe - k34(t)*nC*nH2 - k36(t)*nCH*nH2 - k43(t)*nH2*nO - k45(t)*nOH*nH2 - k51(t)*nO2*nH2 - k54(t)*nH2_p*nH2 - k58(t)*nC_p*nH2 - k60(t)*nCH_p*nH2 - k64(t)*nH2*nCH2_p - k69(t)*nO_p*nH2 - k74(t)*nH2*nOH_p - k75(t)*nH2O_p*nH2 - k88(t)*nH2*nHe_p - k89(t)*nH2*nHe_p - k136(t)*nC_m*nH2 - k139(t)*nH2*nO_m - k141(t)*nH_p*nH2 - k144(t)*nC*nH2 - k148(t)*nC_p*nH2;
+}
+
+double dnHe_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k16(t)*ne*nHe + k19(t)*nH_p*nHe - k17(t)*ne*nHe_p - k18(t)*nH*nHe_p - k26(t)*nHe_p*nO - k29(t)*nC*nHe_p - k88(t)*nH2*nHe_p - k89(t)*nH2*nHe_p - k92(t)*nCH2*nHe_p - k93(t)*nHe_p*nC2 - k95(t)*nOH*nHe_p - k97(t)*nH2O*nHe_p - k98(t)*nH2O*nHe_p - k99(t)*nH2O*nHe_p - k101(t)*nO2*nHe_p - k102(t)*nO2*nHe_p - k104(t)*nCO*nHe_p - k105(t)*nCO*nHe_p - k109(t)*nH_m*nHe_p;
+}
+
+double dnCO(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k38(t)*nCH*nO + k40(t)*nCH2*nO + k41(t)*nCH2*nO + k42(t)*nC2*nO + k46(t)*nC*nOH + k52(t)*nO2*nC + k81(t)*nO2*nC_p + k86(t)*nHCO_p*nC + k87(t)*nHCO_p*nH2O + k106(t)*nCO_p*nH + k129(t)*nHCO_p*ne + k131(t)*ne*nHOC_p + k137(t)*nC_m*nO + k140(t)*nC*nO_m + k146(t)*nC*nO + k158(t)*nC*nM*nO - k53(t)*nH*nCO - k84(t)*nCO*nH3_p - k85(t)*nCO*nH3_p - k104(t)*nCO*nHe_p - k105(t)*nCO*nHe_p;
 }
 
 double dnCH2(double sub_vec_nHx[]) {
@@ -281,38 +443,235 @@ double dnCH2(double sub_vec_nHx[]) {
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
+
 	return k36(t)*nCH*nH2 + k116(t)*ne*nCH3_p + k136(t)*nC_m*nH2 + k144(t)*nC*nH2 - k39(t)*nH*nCH2 - k40(t)*nCH2*nO - k41(t)*nCH2*nO - k62(t)*nH_p*nCH2 - k91(t)*nH_p*nCH2 - k92(t)*nCH2*nHe_p;
 }
 
-double dnCH3_p(double sub_vec_nHx[]) {
+double dnOH_p(double sub_vec_nHx[]) {
 	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
 			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
 			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
 			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
-			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14]
-			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)
-			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)
-			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)
-			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)
-			 , nHe = getnHe(nHe_p)
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
 			 , nM = nC + nO + nSi
 			 , t = T;
-	
-	return k64(t)*nH2*nCH2_p - k66(t)*nH*nCH3_p - k67(t)*nCH3_p*nO - k116(t)*ne*nCH3_p - k117(t)*ne*nCH3_p - k118(t)*ne*nCH3_p;
+
+	return k69(t)*nO_p*nH2 + k70(t)*nH2_p*nO + k71(t)*nH3_p*nO + k94(t)*nH_p*nOH + k98(t)*nH2O*nHe_p - k74(t)*nH2*nOH_p - k119(t)*ne*nOH_p;
+}
+
+double dnC_m(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k142(t)*nC*ne - k107(t)*nC_m*nH_p - k135(t)*nC_m*nH - k136(t)*nC_m*nH2 - k137(t)*nC_m*nO;
+}
+
+double dnHCO_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k32(t)*nHOC_p*nH2 + k33(t)*nHOC_p*nCO + k65(t)*nCH2_p*nO + k67(t)*nCH3_p*nO + k77(t)*nH2O*nC_p + k79(t)*nC*nH3O_p + k82(t)*nO2*nCH2_p + k85(t)*nCO*nH3_p + k164(t)*nCH*nO - k86(t)*nHCO_p*nC - k87(t)*nHCO_p*nH2O - k129(t)*nHCO_p*ne - k130(t)*nHCO_p*ne;
+}
+
+double dnC_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k22(t)*nC*ne + k27(t)*nC*nH_p + k29(t)*nC*nHe_p + k59(t)*nH*nCH_p + k92(t)*nCH2*nHe_p + k93(t)*nHe_p*nC2 + k103(t)*nO2_p*nC + k104(t)*nCO*nHe_p - k20(t)*nC_p*ne - k28(t)*nC_p*nH - k58(t)*nC_p*nH2 - k73(t)*nC_p*nOH - k77(t)*nH2O*nC_p - k78(t)*nH2O*nC_p - k80(t)*nO2*nC_p - k81(t)*nO2*nC_p - k147(t)*nC_p*nH - k148(t)*nC_p*nH2 - k149(t)*nC_p*nO - k159(t)*nC_p*nM*nO;
+}
+
+double dnH_m(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k1(t)*ne*nH - k2(t)*nH_m*nH - k5(t)*nH_m*nH_p - k13(t)*ne*nH_m - k14(t)*nH_m*nH - k15(t)*nH_m*nH_p - k109(t)*nH_m*nHe_p - k132(t)*nC*nH_m - k133(t)*nH_m*nO - k134(t)*nH_m*nOH;
+}
+
+double dnH_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k4(t)*nH*nH2_p + k11(t)*ne*nH + k18(t)*nH*nHe_p + k24(t)*nO_p*nH + k28(t)*nC_p*nH + k89(t)*nH2*nHe_p + k97(t)*nH2O*nHe_p + k106(t)*nCO_p*nH - k3(t)*nH*nH_p - k5(t)*nH_m*nH_p - k7(t)*nH_p*nH2 - k12(t)*ne*nH_p - k15(t)*nH_m*nH_p - k19(t)*nH_p*nHe - k25(t)*nH_p*nO - k27(t)*nC*nH_p - k62(t)*nH_p*nCH2 - k90(t)*nCH*nH_p - k91(t)*nH_p*nCH2 - k94(t)*nH_p*nOH - k96(t)*nH2O*nH_p - k100(t)*nO2*nH_p - k107(t)*nC_m*nH_p - k108(t)*nH_p*nO_m - k141(t)*nH_p*nH2;
+}
+
+double dnH2_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k3(t)*nH*nH_p + k7(t)*nH_p*nH2 + k15(t)*nH_m*nH_p + k55(t)*nH*nH3_p + k88(t)*nH2*nHe_p - k4(t)*nH*nH2_p - k6(t)*ne*nH2_p - k54(t)*nH2_p*nH2 - k56(t)*nC*nH2_p - k70(t)*nH2_p*nO;
+}
+
+double dnH3O_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k75(t)*nH2O_p*nH2 + k76(t)*nH2O*nH3_p + k87(t)*nHCO_p*nH2O - k79(t)*nC*nH3O_p - k123(t)*ne*nH3O_p - k124(t)*ne*nH3O_p - k125(t)*ne*nH3O_p - k126(t)*ne*nH3O_p;
+}
+
+double dnO_m(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k150(t)*ne*nO - k108(t)*nH_p*nO_m - k138(t)*nH*nO_m - k139(t)*nH2*nO_m - k140(t)*nC*nO_m;
+}
+
+double dnH3_p(double sub_vec_nHx[]) {
+	double nH_p = sub_vec_nHx[1], nH2  = sub_vec_nHx[2], nHe_p = sub_vec_nHx[3]
+			 , nC_p = sub_vec_nHx[4], nO_p = sub_vec_nHx[5], nOH   = sub_vec_nHx[6]
+			 , nH2O = sub_vec_nHx[7], nCO  = sub_vec_nHx[8], nC2   = sub_vec_nHx[9]
+			 , nO2  = sub_vec_nHx[10], nHCO_p = sub_vec_nHx[11], nCH = sub_vec_nHx[12]
+			 , nCH2 = sub_vec_nHx[13], nCH3_p = sub_vec_nHx[14], nH_m = sub_vec_nHx[15]
+			 , nH2_p = sub_vec_nHx[16], nH3_p = sub_vec_nHx[17], nCH_p = sub_vec_nHx[18]
+			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]
+			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]
+			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]
+			 , nH = getnH(sub_vec_nHx)
+			 , nC = getnC(sub_vec_nHx)
+			 , ne = getne(sub_vec_nHx)
+			 , nO = getnO(sub_vec_nHx)
+			 , nHe = getnHe(sub_vec_nHx)
+			 , nM = nC + nO + nSi
+			 , t = T;
+
+	return k54(t)*nH2_p*nH2 + k141(t)*nH_p*nH2 - k55(t)*nH*nH3_p - k57(t)*nC*nH3_p - k71(t)*nH3_p*nO - k72(t)*nOH*nH3_p - k76(t)*nH2O*nH3_p - k84(t)*nCO*nH3_p - k85(t)*nCO*nH3_p - k110(t)*ne*nH3_p - k111(t)*ne*nH3_p;
 }
 
 // run a step of the derivatives
 void derivs(double x, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
-	for (int i = 1; i <= nvar; i += 14) {
+	for (int i = 1; i <= nvar; i += NDERV) {
 		double *sub_vec_nHx = vec_nHx + (i-1);
 		
 		// pH_p
@@ -356,19 +715,47 @@ void derivs(double x, int nvar, double vec_nHx[], double vec_dnHxdt[]) {
 		
 		// pCH3_p
 		vec_dnHxdt[i+13] = dnCH3_p(sub_vec_nHx);
+		
+		// H_m 
+		vec_dnHxdt[i+14] = dnH_m(sub_vec_nHx);
+		// H2_p 
+		vec_dnHxdt[i+15] = dnH2_p(sub_vec_nHx);
+		// H3_p 
+		vec_dnHxdt[i+16] = dnH3_p(sub_vec_nHx);
+		// CH_p 
+		vec_dnHxdt[i+17] = dnCH_p(sub_vec_nHx);
+		// CH2_p 
+		vec_dnHxdt[i+18] = dnCH2_p(sub_vec_nHx);
+		// OH_p 
+		vec_dnHxdt[i+19] = dnOH_p(sub_vec_nHx);
+		// H2O_p 
+		vec_dnHxdt[i+20] = dnH2O_p(sub_vec_nHx);
+		// H3O_p 
+		vec_dnHxdt[i+21] = dnH3O_p(sub_vec_nHx);
+		// CO_p 
+		vec_dnHxdt[i+22] = dnCO_p(sub_vec_nHx);
+		// HOC_p 
+		vec_dnHxdt[i+23] = dnHOC_p(sub_vec_nHx);
+		// O_m 
+		vec_dnHxdt[i+24] = dnO_m(sub_vec_nHx);
+		// C_m 
+		vec_dnHxdt[i+25] = dnC_m(sub_vec_nHx);
+		// O2_p 
+		vec_dnHxdt[i+26] = dnO2_p(sub_vec_nHx);
 	}
 }
 
 double (*derivs_arr[])(double[]) = { 
 	&dnH_p, &dnH2, &dnHe_p, &dnC_p, &dnO_p, &dnOH, &dnH2O, &dnCO, &dnC2, &dnO2, &dnHCO_p, &dnCH, &dnCH2, &dnCH3_p
+	, &dnH_m, &dnH2_p, &dnH3_p, &dnCH_p, &dnCH2_p, &dnOH_p, &dnH2O_p, &dnH3O_p, &dnCO_p, &dnHOC_p, &dnO_m, &dnC_m, &dnO2_p
 };
 
 void jacobn(double x, double vec_nHx[], double dfdx[], double **dfdy, int nvar)
 {
-	for (int i = 1; i <= nvar; i += 14) {
+	for (int i = 1; i <= nvar; i += NDERV) {
 		// copy_vector(vec_nHx + (i-1), y_temp, 1, nvar);
 		double *y_temp = vec_nHx + (i-1);		
-		jacobian(derivs_arr, 14, y_temp, 1e-20, dfdy, nvar);
+		jacobian(derivs_arr, NDERV, y_temp, 1e-7, dfdy, nvar);
 	}
 }
 

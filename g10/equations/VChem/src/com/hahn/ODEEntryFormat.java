@@ -14,15 +14,23 @@ public class ODEEntryFormat {
 		sb.append("			 , nCH2_p = sub_vec_nHx[19], nOH_p = sub_vec_nHx[20], nH2O_p = sub_vec_nHx[21]\n");
 		sb.append("			 , nH3O_p = sub_vec_nHx[22], nCO_p = sub_vec_nHx[23], nHOC_p = sub_vec_nHx[24]\n");
 		sb.append("			 , nO_m = sub_vec_nHx[25], nC_m = sub_vec_nHx[26], nO2_p = sub_vec_nHx[27]\n");
-		sb.append("			 , nH = getnH(nH_p, nH2, nOH, nH2O, nHCO_p, nCH, nCH2, nCH3_p)\n");
-		sb.append("			 , nC = getnC(nC_p, nCO, nC2, nHCO_p, nCH, nCH2, nCH3_p)\n");
-		sb.append("			 , ne = getne(nH_p, nHe_p, nC_p, nO_p, nHCO_p, nCH3_p)\n");
-		sb.append("			 , nO = getnO(nO_p, nOH, nH2O, nCO, nO2, nHCO_p)\n");
-		sb.append("			 , nHe = getnHe(nHe_p)\n");
+		sb.append("			 , nH = getnH(sub_vec_nHx)\n");
+		sb.append("			 , nC = getnC(sub_vec_nHx)\n");
+		sb.append("			 , ne = getne(sub_vec_nHx)\n");
+		sb.append("			 , nO = getnO(sub_vec_nHx)\n");
+		sb.append("			 , nHe = getnHe(sub_vec_nHx)\n");
 		sb.append("			 , nM = nC + nO + nSi\n");
 		sb.append("			 , t = T;\n\n");
 		sb.append(String.format("\treturn %s;\n", e.toString()));
 		sb.append("}\n");
+		
+		return sb.toString();
+	}
+	
+	public static String formatShort(ODEEntry e) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(e.getDeriv() + " = " + e.toString() + "\n\n");
 		
 		return sb.toString();
 	}

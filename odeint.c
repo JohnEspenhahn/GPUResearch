@@ -1,5 +1,7 @@
 #include "odeint.h"
 
+#include <stdio.h>
+
 #define MAXSTP 10000000
 #define TINY 1.0e-30		// Prevents divbyzero
 
@@ -68,6 +70,8 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 				xp[++kount]=x; // Save ﬁnal step. 
 				for (i=1;i<=nvar;i++) yp[i][kount]=y[i];
 			}
+			
+			printf("h: %G\n", h);
 			
 			free_vector(dydx,1,nvar);
 			free_vector(y,1,nvar);

@@ -1,8 +1,6 @@
 #include "simulation.h"
 
-int main() {
-	FILE *fp = fopen("out.csv", "w");
-	
+int main() {	
 	char *p, s[100];
 	double x2;
 	
@@ -17,11 +15,14 @@ int main() {
 			} else break;
 		}
 		
-		if (x2 > 0) run(fp, x2, true);
-		else break;
+		if (x2 > 0) {
+			FILE *fp = fopen("out.csv", "w");
+			
+			run(fp, x2, true);
+			
+			fclose(fp);
+		} else break;
 	} while (1);
-	
-	fclose(fp);
 	
 	return 0;
 }

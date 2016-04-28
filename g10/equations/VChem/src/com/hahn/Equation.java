@@ -57,8 +57,7 @@ public class Equation {
 				
 				// Check charge
 				if (count != null && (count.endsWith("m") || count.endsWith("p"))) {
-					Byte oldCharge = map.get("e");
-					if (oldCharge == null) oldCharge = 0;
+					Byte oldCharge = map.getOrDefault("e", (byte) 0);
 					
 					if (count.endsWith("m")) map.put("e", (byte) (oldCharge + 1));
 					else map.put("e", (byte) (oldCharge - 1));
@@ -73,8 +72,7 @@ public class Equation {
 				}
 				
 				// Track element
-				Byte oldCount = map.get(element);
-				if (oldCount == null) oldCount = 0;
+				Byte oldCount = map.getOrDefault(element, (byte) 0);
 				map.put(element, (byte) (oldCount + addCount));
 			}
 		}
@@ -90,12 +88,16 @@ public class Equation {
 		for (Entry<String, EquationProduct> e: net_products.entrySet()) {
 			EquationProduct amnt = e.getValue();
 			if (amnt.isReactant()) {
-				str += "*";
+				for (int j = 0; j < amnt.getDistruction(); j++) {
+					str += "*n" + e.getKey();
+				}
+				
+				/*
 				if (amnt.getDistruction() > 1) {
 					str += amnt.getDistruction() + "*";
 				}
-				
 				str += "n" + e.getKey();
+				*/
 			}
 		}
 		
