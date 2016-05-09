@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Main {
-	static List<Equation> equations;
-	static Map<String, ODEEntry> ode_eqs;
+	private static List<Equation> equations;
+	private static Map<String, ODEEntry> ode_eqs;
 
 	public static void main(String[] args) throws IOException {
 		equations = new ArrayList<Equation>();
@@ -78,12 +78,28 @@ public class Main {
 		
 		s.close();
 		
-		File f = new File("out.txt");
+		ode_out();
+		k_out();
+	}
+	
+	private static void ode_out() throws IOException {
+		File f = new File("ode_out.txt");
 		if (f.exists()) f.delete();
 		
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f.getCanonicalPath(), true)));
 		for (Entry<String, ODEEntry> ode: ode_eqs.entrySet()) {
 			out.println(ODEEntryFormat.formatShort(ode.getValue()));	    
+		}
+		out.close();
+	}
+	
+	private static void k_out() throws IOException {
+		File f = new File("k_out.txt");
+		if (f.exists()) f.delete();
+		
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f.getCanonicalPath(), true)));
+		for (Equation e: equations) {
+			out.println(EquationFormat.format(e));
 		}
 		out.close();
 	}

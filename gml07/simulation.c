@@ -10,7 +10,7 @@ double *xp, **yp, dxsav;
 void run(FILE *fp, double x2, bool print) {	
 	dxsav = x2 / (KMAX * 1.2);
 	xp = vector(1, KMAX);
-	yp = matrix(1, NVAR, 1, KMAX);
+	yp = matrix(1, KMAX, 1, NVAR);
 	
 	double *vec_nHx = vector(1, NVAR);
 	vec_nHx[1] = 1e-4;
@@ -42,15 +42,15 @@ void run(FILE *fp, double x2, bool print) {
 	}
 	
 	fprintf(fp, "x (Myr),%% H2,Temperature,Grain Temperature,%% H_p\n");	
-	for (int i = 1; i < KMAX; i++) {
+	for (int i = 1; i < kount; i++) {
 		// int i = KMAX - 1;
 		double myr = xp[i]/(60*60*24*365*1e6);
-		double perc_h2 = getxH2(yp[1][i]);
-		double perc_hp = getxH_p(yp[2][i]);
+		double perc_h2 = getxH2(yp[i][1]);
+		double perc_hp = getxH_p(yp[i][2]);
 		fprintf(fp, "%G,%G,%G,%G,%G\n", myr, perc_h2, getTemp(), getGrainTemp(), perc_hp);
 	}
 	
 	free_vector(vec_nHx, 1, NVAR);
-	free_matrix(yp, 1, NVAR, 1, KMAX);
+	free_matrix(yp, 1, KMAX, 1, NVAR);
 	free_vector(xp, 1, KMAX);
 }

@@ -10,10 +10,10 @@ extern double *xp,**yp,dxsav;
 
 // User storage for intermediate results. Preset kmax and dxsav in 
 // the calling program. If kmax != 0 results are stored at approximate
-// intervals dxsav in the arrays xp[1..kount], yp[1..nvar] [1..kount],
+// intervals dxsav in the arrays xp[1..kount], yp[1..kount][1..nvar],
 // where kount is output by odeint. Deﬁning declarations for these 
 // variables, with memoryallocations xp[1..kmax] and 
-// yp[1..nvar][1..kmax] for the arrays, should be in the calling program
+// yp[1..kmax][1..nvar] for the arrays, should be in the calling program
 
 void odeint(double ystart[], int nvar, double x1, double x2, double eps, 
 		double h1, double hmin, int *nok, int *nbad, 
@@ -50,7 +50,7 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 			xp[++kount]=x; // Store intermediate results. 
 			
 			for (i=1;i<=nvar;i++) 
-				yp[i][kount]=y[i];
+				yp[kount][i]=y[i];
 			
 			xsav=x;
 		} 
@@ -68,7 +68,7 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 			
 			if (kmax) { 
 				xp[++kount]=x; // Save ﬁnal step. 
-				for (i=1;i<=nvar;i++) yp[i][kount]=y[i];
+				for (i=1;i<=nvar;i++) yp[kount][i]=y[i];
 			}
 			
 			printf("h: %G\n", h);

@@ -44,8 +44,10 @@ public class Equation {
 	
 	private void parseElements(String eq, Map<String, Byte> map, int species_add, Map<String, EquationProduct> species_map) {
 		for (String species: eq.split("\\s+")) {
+			if (species.length() == 0) continue;
+			
 			// Track species
-			EquationProduct speciesCount = species_map.getOrDefault(species, new EquationProduct());
+			EquationProduct speciesCount = species_map.getOrDefault(species, new EquationProduct(species));
 			speciesCount.add(species_add);
 			species_map.put(species, speciesCount);
 			
@@ -78,6 +80,10 @@ public class Equation {
 		}
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	public int contains(String species) {
 		EquationProduct p = net_products.get(species);
 		return (p == null ? 0 : p.getNetProduction());
@@ -86,22 +92,36 @@ public class Equation {
 	public String asODEEntry() {
 		String str = "k" + id + "(t)";
 		for (Entry<String, EquationProduct> e: net_products.entrySet()) {
-			EquationProduct amnt = e.getValue();
-			if (amnt.isReactant()) {
-				for (int j = 0; j < amnt.getDistruction(); j++) {
+			EquationProduct p = e.getValue();
+			if (p.isReactant()) {
+				for (int j = 0; j < p.getDistruction(); j++) {
 					str += "*n" + e.getKey();
 				}
-				
-				/*
-				if (amnt.getDistruction() > 1) {
-					str += amnt.getDistruction() + "*";
-				}
-				str += "n" + e.getKey();
-				*/
 			}
 		}
 		
 		return str;
+	}
+	
+	/**
+	 * Get the base-1 indexed reactant
+	 * @param idx The base-1 index
+	 * @return The reaction
+	 * @throws IndexOutOfBoundsException If no idx'th reaction
+	 */
+	public EquationProduct getNReactant(int idx) {
+		int at_idx = 1;
+		for (Entry<String, EquationProduct> e: net_products.entrySet()) {
+			EquationProduct p = e.getValue();
+			if (p.isReactant()) {
+				for (int j = 0; j < p.getDistruction(); j++) {
+					at_idx += 1;
+					if (at_idx > idx) return p;
+				}
+			}
+		}
+		
+		throw new IndexOutOfBoundsException("No " + at_idx + "th reactant in reaction " + getId());
 	}
 	
 	public String toString() {

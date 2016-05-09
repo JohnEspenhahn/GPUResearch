@@ -90,6 +90,7 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 		lubksb(a,n,indx,g1); // Solve for g1.
 		for (i=1;i<=n;i++) // Compute intermediate values of y and x.
 			y[i]=ysav[i]+A21*g1[i];
+		
 		*x=xsav+A2X*h;
 		(*derivs)(*x,n,y,dydx); // Compute dydx at the intermediate values.
 		for (i=1;i<=n;i++) // Set up right-hand side for g2.
@@ -103,9 +104,11 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 		for (i=1;i<=n;i++) // Set up right-hand side for g3.
 			g3[i]=dydx[i]+h*C3X*dfdx[i]+(C31*g1[i]+C32*g2[i])/h;
 		lubksb(a,n,indx,g3); // Solve for g3.
+		
 		for (i=1;i<=n;i++) // Set up right-hand side for g4.
 			g4[i]=dydx[i]+h*C4X*dfdx[i]+(C41*g1[i]+C42*g2[i]+C43*g3[i])/h;
 		lubksb(a,n,indx,g4); // Solve for g4.
+		
 		for (i=1;i<=n;i++) { // Get fourth-order estimate of y and error estimate.
 			y[i]=ysav[i]+B1*g1[i]+B2*g2[i]+B3*g3[i]+B4*g4[i];
 			err[i]=E1*g1[i]+E2*g2[i]+E3*g3[i]+E4*g4[i];
@@ -116,7 +119,7 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 		for (i=1;i<=n;i++) errmax=FMAX(errmax,fabs(err[i]/yscal[i]));
 		
 		errmax /= eps; // Scale relative to required tolerance.
-		if (errmax <= 1.0) { // Step succeeded. Compute size of next step and re-turn
+		if (errmax <= 1.0) { // Step succeeded. Compute size of next step and return
 			*hdid=h;
 			*hnext=(errmax > ERRCON ? SAFETY*h*pow(errmax,PGROW) : GROW*h);
 			free_vector(ysav,1,n);
