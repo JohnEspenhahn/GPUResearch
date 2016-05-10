@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define KMAX 100
-
-void run(FILE *fp, double x2, bool print);
+void run(FILE *fp, double x2, double eps, double h1, bool print);
 
 #endif

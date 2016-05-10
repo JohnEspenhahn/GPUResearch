@@ -1,14 +1,17 @@
-PAPER=gml07
-SOURCE=odeint.h odeint.c nrutil.h nrutil.c stiff.h stiff.c stifbs.h stifbs.c $(PAPER)/derivs.h $(PAPER)/derivs.c oiutil.h oiutil.c $(PAPER)/simulation.c simulation.h jacobian.h jacobian.c
-FLAGS=-Wno-unused-variable -std=c99
-DEBUG=-g
+PAPER=g10
+OBJECTS=odeint.o nrutil.o stiff.o $(PAPER)/derivs.o oiutil.o $(PAPER)/simulation.o jacobian.o $(PAPER)/tscalecsv.o
+CFLAGS=-Wno-unused-variable -std=c99 -g -Wall
 
-all: clean
-	gcc $(DEBUG) $(SOURCE) main.c -o main.exe -Wall $(FLAGS)
-	
-test: clean
-	gcc $(DEBUG) $(SOURCE) test.h test.c -o test.exe -Wall $(FLAGS)
+.c.o:
+	gcc -c $*.c $(CFLAGS)
+
+main.exe: main.o $(OBJECTS)
+	gcc -o $@ $(**F) $(CFLAGS)
+	del *.o
+	del *.gch
 	
 clean:
 	del *.exe
 	del *.csv
+	del *.o
+	del *.gch

@@ -3,6 +3,8 @@
 
 #define M_h 1.67e-24 // Mass of a proton (g)
 
+#define KMAX 100
+
 #define mu_h 1
 #define mu_h2 (mu_h*2)
 #define mu_he 2

@@ -1,5 +1,6 @@
 #include "stiff.h"
 #include "oiutil.h"
+#include <stdio.h>
 
 #define MAXTRY 80 // default 40
 
@@ -38,6 +39,8 @@
 #define C4X -0.553509845700e-01
 #define A2X 0.462
 #define A3X 0.880208333333
+
+extern FILE *csv_fp;
 
 void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 			double yscal[], double *hdid, double *hnext,
@@ -113,6 +116,7 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 			y[i]=ysav[i]+B1*g1[i]+B2*g2[i]+B3*g3[i]+B4*g4[i];
 			err[i]=E1*g1[i]+E2*g2[i]+E3*g3[i]+E4*g4[i];
 		}
+		
 		*x=xsav+h;
 		if (*x == xsav) nrerror("stepsize not significant in stiff");
 		errmax=0.0; // Evaluate accuracy.
@@ -120,6 +124,15 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 		
 		errmax /= eps; // Scale relative to required tolerance.
 		if (errmax <= 1.0) { // Step succeeded. Compute size of next step and return
+			/// printf("Done with h:%G\te:%G\tshrink:%d\n", h, errmax, errmax > ERRCON);
+			
+			// Output error
+			fprintf(csv_fp, "%G", xsav);
+			for (i=1;i<=n;i++) {
+				fprintf(csv_fp, ",%G", fabs(err[i]/yscal[i]));
+			}
+			fprintf(csv_fp, "\n");
+		
 			*hdid=h;
 			*hnext=(errmax > ERRCON ? SAFETY*h*pow(errmax,PGROW) : GROW*h);
 			free_vector(ysav,1,n);
