@@ -7,18 +7,21 @@
 int kmax = KMAX, kount = 0;
 double *xp, **yp, dxsav;
 
-void run(FILE *fp, double x2, bool print) {	
+FILE *csv_fp;
+
+void run(FILE *fp, double x2, double eps, double h1, bool print) {	
 	dxsav = x2 / (KMAX * 1.2);
 	xp = vector(1, KMAX);
 	yp = matrix(1, KMAX, 1, NVAR);
+	csv_fp = fp;
 	
 	double *vec_nHx = vector(1, NVAR);
 	vec_nHx[1] = 1e-4;
 	vec_nHx[2] = 1e-4;
 	// for (int i = 1; i <= NVAR; i++) { vec_nHx[i] = 0; }
 	
-	double eps = 1e-9;
-	double h1  = 2e11;
+	// double eps = 1e-9;
+	// double h1  = 2e11;
 	
 	int nok = 0, nbad = 0;
 	odeint(vec_nHx, NVAR, 0, x2, eps, h1, 0, &nok, &nbad, &derivs, &stiff);
