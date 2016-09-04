@@ -71,12 +71,15 @@ void odeint(double ystart[], int nvar, double x1, double x2, double eps,
 				for (i=1;i<=nvar;i++) yp[kount][i]=y[i];
 			}
 			
+			printf("hdid: %G\n", hdid);
+			
 			free_vector(dydx,1,nvar);
 			free_vector(y,1,nvar);
 			free_vector(yscal,1,nvar);
 			return; // Normal exit
 		}
 		
+		// DEBUG
 		// printf("At x: %G\tto:%G\n", x, x2);
 		// getchar();
 		

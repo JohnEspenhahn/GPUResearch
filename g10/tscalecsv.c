@@ -174,17 +174,19 @@ void tscaleoutput(FILE *fp, double *xp, double **yp, int kount) {
 		fprintf(fp, "%G,", myr);
 		
 		double *y = yp[i];
-		for (int j = 1; j <= 164; j++) {
-			struct reaction *r = &reactions[j];
+		for (int j = 0; j < 164; j++) {
+			struct reaction r = reactions[j];
 			
-			double y1 = loadY(y, r->n1), 
-				   y2 = loadY(y, r->n2);
-			
-			fprintf(fp, "%G,", N_tot/(r->k(TEMP_INIT, y)*y1*y2));
+			double y1 = loadY(y, r.n1), 
+				   y2 = loadY(y, r.n2),
+				   kv = r.k(TEMP_INIT, y);
+				   
+			if (kv != 0) fprintf(fp, "%G,", (kv*y1*y2));
+			else fprintf(fp, "0,");
 		}
 		
 		// Special case for 165
-		fprintf(fp, "%G", N_tot/(k165(TEMP_INIT, GRAIN_TEMP_INIT)*getnH(y)*getnH(y)));
+		fprintf(fp, "%G", (k165(TEMP_INIT, GRAIN_TEMP_INIT)*getnH(y)*getnH(y)));
 		
 		// End of step output
 		fprintf(fp, "\n");
@@ -203,6 +205,7 @@ double loadY(double *y, int idx) {
 			if (idx >= 1 && idx <= 27) {
 				return y[idx];
 			} else {
+				printf("Unknown y idx %d\n", idx);
 				return 0;
 			}
 	}

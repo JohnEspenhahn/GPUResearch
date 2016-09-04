@@ -27,7 +27,7 @@ void run(FILE *fp, double x2, double eps, double h1, bool print) {
 	printf("OK calls %d\n", nok);
 	printf("bad calls %d\n\n---------------------\n", nbad);
 	
-	// tscaleoutput(fp, xp, yp, kount);
+	tscaleoutput(fp, xp, yp, kount);
 	
 	free_vector(vec_nHx, 1, NVAR);
 	free_matrix(yp, 1, KMAX, 1, NVAR);

@@ -124,14 +124,17 @@ void stiff(double y[], double dydx[], int n, double *x, double htry, double eps,
 		
 		errmax /= eps; // Scale relative to required tolerance.
 		if (errmax <= 1.0) { // Step succeeded. Compute size of next step and return
-			/// printf("Done with h:%G\te:%G\tshrink:%d\n", h, errmax, errmax > ERRCON);
+			// printf("Done with h:%G\te:%G\tshrink:%d\n", h, errmax, errmax > ERRCON);
 			
+			/*
+			// DEBUG
 			// Output error
 			fprintf(csv_fp, "%G", xsav);
 			for (i=1;i<=n;i++) {
 				fprintf(csv_fp, ",%G", fabs(err[i]/yscal[i]));
 			}
 			fprintf(csv_fp, "\n");
+			*/
 		
 			*hdid=h;
 			*hnext=(errmax > ERRCON ? SAFETY*h*pow(errmax,PGROW) : GROW*h);
