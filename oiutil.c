@@ -1,3 +1,5 @@
+// Numerical Recipes in C, The Art of Scientific Computing, Second Edition
+
 #include "oiutil.h"
 #include "nrutil.h"
 #include <math.h>

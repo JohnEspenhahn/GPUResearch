@@ -1,3 +1,6 @@
+// Numerical Recipes in C, The Art of Scientific Computing, Second Edition 
+// And John Espenhahn
+
 #include "odeint.h"
 
 #define MAXSTP 10000000

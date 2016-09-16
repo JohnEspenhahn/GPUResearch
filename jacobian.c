@@ -1,3 +1,5 @@
+// John Espenhahn
+
 #include "jacobian.h"
 
 /**

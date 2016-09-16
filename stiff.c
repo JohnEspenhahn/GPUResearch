@@ -1,3 +1,5 @@
+// Numerical Recipes in C, The Art of Scientific Computing, Second Edition
+
 #include "stiff.h"
 #include "oiutil.h"
 

@@ -1,3 +1,5 @@
+// Numerical Recipes in C, The Art of Scientific Computing, Second Edition
+
 /* CAUTION: This is the combined ANSI and traditional K&R C version
    of the Numerical Recipes utility file nrutil.c.  Do not confuse
    this file with the same-named file nrutil.c that is supplied in

@@ -1,3 +1,5 @@
+// Numerical Recipes in C, The Art of Scientific Computing, Second Edition
+
 #include "bsstep.h"
 
 #define KMAXX 16			// Max rows in extrapolation. Default = 8
